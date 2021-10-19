@@ -1,0 +1,76 @@
+%% Style copied from https://github.com/omelkonian/presentations/tree/master/%5B2019.08.20%5D%20BitML%20(SRC%20Presentation%20%40%20ICFP))
+
+%% \documentclass[aspectratio=43]{beamer}
+\documentclass[aspectratio=169]{beamer}
+
+\usetheme[
+  % block=fill,
+  % background=light,
+  % titleformat=smallcaps,
+  % progressbar=frametitle,
+  % numbering=none,
+]{metropolis}%Warsaw,Madrid
+\setbeamersize{text margin left=.5cm,text margin right=.5cm}
+
+\usepackage{catchfilebetweentags}
+\usepackage[useregional]{datetime2}
+
+\RequirePackage{newunicodechar, amssymb, stmaryrd, unicode-math, setspace, comment}
+
+\input{macros}
+
+\usepackage{libertine}  %% [tt=false]
+
+\setmathfont{XITSMath-Regular.otf}
+
+%----------------------------------------------------------------------------
+
+\title{Can Tensor Programming Be Liberated from the Fortran Data Paradigm?}
+% \subtitle{...}
+\author{Conal Elliott}
+\date{October 2021}
+
+\begin{document}
+
+\begin{center}
+\setbeamerfont{title}{size=\large}
+\setbeamerfont{subtitle}{size=\small}
+\maketitle
+\setbeamerfont{title}{size=\Large}
+\setbeamerfont{subtitle}{size=\large}
+\end{center}
+
+\begin{frame}{``This is the Unix philosophy:}
+\begin{itemize}\itemsep4ex
+\item Write programs that do one thing and do it well.
+\item Write programs to work together.
+\item \hspace{4.688in}{\ }''
+\end{itemize}
+\vspace{2ex}
+\begin{flushright}
+-- Doug McIlroy \hspace{0.5in}{\ }
+\end{flushright}
+\end{frame}
+
+\begin{frame}{``This is the Unix philosophy:}
+\begin{itemize}\itemsep4ex
+\item Write programs that do one thing and do it well.
+\item Write programs to work together.
+\item Write programs to handle text streams, because that is a universal interface.''
+\end{itemize}
+\vspace{2ex}
+\begin{flushright}
+-- Doug McIlroy \hspace{0.5in}{\ }
+\end{flushright}
+\end{frame}
+
+\begin{frame}{How Unix defeated its own philosophy}
+\begin{itemize}\itemsep4ex
+\item Write programs that do one thing and do it well.
+\item Write programs to work together.
+\item \textcolor{red}{Write programs to handle text streams, because that is a universal interface.}
+\end{itemize}
+\vspace{9.8ex}
+\end{frame}
+
+\end{document}

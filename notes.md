@@ -1,10 +1,10 @@
-## Notes for "Can Tensor Programming Be Liberated from the Fortran Data Paradigm?"
+# Notes for "Can Tensor Programming Be Liberated from the Fortran Data Paradigm?"
 
 Friday October 29, 2021 as part of the Oxford Tensor Computation seminar
 
 What old talks do I have for source material, and what do I want to add?
 
-Some old talks and papers:
+## Some old talks and papers:
 
 *   "Understanding parallel scan" 2013:
     *   CUDA C implementation that started my journey
@@ -20,8 +20,10 @@ Some old talks and papers:
 *   "From Haskell to Hardware via CCCs" 2015:
     *   Generalized matrices.
     *   Bitonic sort
+*   "Deep learning rebooted"
 
-Miscellaneous thoughts:
+
+## Miscellaneous thoughts
 
 *   Optimization obscures clarity and composability, so do it late.
 *   Possible titles:
@@ -55,5 +57,31 @@ Miscellaneous thoughts:
     Hopefully in Agda.
 *   Show how to map natural parallel algorithms (on non-arrays) to parallel array algorithms, systematically and *correctly*.
 
+## A possible outline
+
+*   The Unix philosophy:
+    *   How Unix defeated its own philosophy (parser and unparser)
+    *   How array programming does the same ("parser and unparser")
+*   An efficient array program:
+    *   Parallel prefix in CUDA
+    *   Realization: not an *array* algorithm
+*   Questions:
+    *   How to tease out the natural data type & algorithm hiding behind an array program?
+    *   Conversely, how to turn natural data types & algorithms into array programs correctly and systematically (even automatically)?
+*   Two problems:
+    *   Indexing ("word-at-a-time") vs structure
+    *   Indexing with numbers
+*   Correctness:
+    *   Commutative diagram with natural type and algorithm above and array below
+
+*   "Parsing" indices --- index isomorphisms
+*   Trie structures (exponentials) and their isomorphisms
+
+*   Our mental habits are trained by archaic technology
+
+*   Optimization is important, but it obscures clarity and thwarts composability, so do it late.
+
+
+<!-- References -->
 
 [*Generic functional parallel algorithms: Scan and FFT*]: http://conal.net/papers/generic-parallel-functional "paper by Conal Elliott (2017)"
