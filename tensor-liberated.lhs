@@ -162,11 +162,12 @@ What is it?
 \begin{code}
 data Td a = L a | B (Td a) (Td a)
 \end{code}
-\vspace{-2ex}
+\vspace{-7ex}
 \pause
 \begin{code}
-deriving instance Functor Td
-
+SPC SPC deriving instance Functor
+\end{code}
+\begin{code}
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x)    = (L mempty , x)
 scanTd (B u v)  = (B u' (fmap (utot SPC <>) v') , utot <> vtot)
@@ -178,9 +179,21 @@ scanTd (B u v)  = (B u' (fmap (utot SPC <>) v') , utot <> vtot)
 Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{16}{33}{4}}
+\begin{center}
+\wpicture{5in}{lsums-rt4}
+\end{center}
+\end{frame}
+
 \begin{frame}{Work-inefficient parallel prefix (left scan) \stats{32}{81}{5}}
 \begin{center}
 \wpicture{5in}{lsums-rt5}
+\end{center}
+\end{frame}
+
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{64}{193}{6}}
+\begin{center}
+\wpicture{5in}{lsums-rt6}
 \end{center}
 \end{frame}
 
