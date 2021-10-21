@@ -1,15 +1,7 @@
-%% Style copied from https://github.com/omelkonian/presentations/tree/master/%5B2019.08.20%5D%20BitML%20(SRC%20Presentation%20%40%20ICFP))
+%% -*- latex -*-
 
 %% \documentclass[aspectratio=43]{beamer}
 \documentclass[aspectratio=169]{beamer}
-
-%% \usetheme[
-%%   % block=fill,
-%%   %% background=light,
-%%   % titleformat=smallcaps,
-%%   % progressbar=frametitle,
-%%   % numbering=none,
-%% ]{metropolis}%Warsaw,Madrid
 
 %% \setbeamercolor{background canvas}{bg=white} %% otherwise ``light''
 
@@ -18,7 +10,7 @@
 \useinnertheme[shadow]{rounded}
 % \useoutertheme{default}
 \useoutertheme{shadow}
-\useoutertheme{infolines}
+% \useoutertheme{infolines}
 % Suppress navigation arrows
 \setbeamertemplate{navigation symbols}{}
 
@@ -30,9 +22,13 @@
 \RequirePackage{agda, tikz-cd, newunicodechar, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
 
 \input{macros}
-\input{commands}
+%% \input{commands}
 \input{unicode}
-\input{Blank}
+
+%include polycode.fmt
+%include forall.fmt
+%include greek.fmt
+%include formatting.fmt
 
 %% Arrow labels are too small by default
 \tikzcdset{every label/.append style = {font = \normalsize}}
@@ -46,13 +42,9 @@
 \nc\arU[1]{\arD{u}{#1}}
 \nc\arUR[2]{\arD{u}{#1} \arD{r}{#2} \&}
 
-%% \usepackage{libertine}  %% [tt=false]
-
-%% \setmathfont{XITSMath-Regular.otf}
-
 %----------------------------------------------------------------------------
 
-\title[Can Tensor Programming Be Liberated ...?]{Can Tensor Programming Be Liberated\\ from the Fortran Data Paradigm?}
+\title[Can Tensor Programming Be Liberated ...?]{Can Tensor Programming Be Liberated\\from the Fortran Data Paradigm?}
 % \subtitle{...}
 \author{Conal Elliott}
 \date{October 2021}
@@ -92,61 +84,13 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{An efficient array program (CUDA C)}
-\begin{minipage}[c]{0.7\textwidth}
-\fontsize{5pt}{6pt}
-\begin{verbatim}
-__global__ void prescan(float *g_odata, float *g_idata, int n) {
-    extern __shared__ float temp[];  // allocated on invocation
-    int thid = threadIdx.x;
-    int offset = 1;
-    // load input into shared memory
-    temp[2*thid] = g_idata[2*thid];
-    temp[2*thid+1] = g_idata[2*thid+1];
-    // build sum in place up the tree
-    for (int d = n>>1; d > 0; d >>= 1) {
-        __syncthreads();
-        if (thid < d) {
-            int ai = offset*(2*thid+1)-1;
-            int bi = offset*(2*thid+2)-1;
-            temp[bi] += temp[ai]; }
-        offset *= 2; }
-    // clear the last element
-    if (thid == 0) { temp[n - 1] = 0; }
-    // traverse down tree & build scan
-    for (int d = 1; d < n; d *= 2) {
-        offset >>= 1;
-        __syncthreads();
-        if (thid < d) {
-            int ai = offset*(2*thid+1)-1;
-            int bi = offset*(2*thid+2)-1;
-            float t = temp[ai];
-            temp[ai] = temp[bi];
-            temp[bi] += t; } }
-    __syncthreads();
-    // write results to device memory
-    g_odata[2*thid] = temp[2*thid];
-    g_odata[2*thid+1] = temp[2*thid+1]; }
-\end{verbatim}
-\end{minipage}
-\hspace{-1in}
-\begin{minipage}[c]{0.25\textwidth}
-\begin{figure}
-\wpicture{2in}{beaker}
-\\
-\hspace{0.75in}\emph{WAT}
-\end{figure}
-\end{minipage}
-
-\scriptsize
-\vspace{-3ex}
-\hspace{2.5in}
-\href{http://http.developer.nvidia.com/GPUGems3/gpugems3_ch39.html}{Source: Harris, Sengupta, and Owens in \emph{GPU Gems 3}, Chapter 39}
+\begin{frame}{An efficient array program (CUDA C)}
+\vspace{0.5ex}
+\hspace{1in}\wpicture{4.35in}{cuda-and-beaker.pdf}
 \end{frame}
 
 \begin{frame}[fragile]{In NESL}
-\vspace{6ex}
-\begin{quote}
+\vspace{4ex}
 \begin{verbatim}
 function scan(a) =
   if #a == 1 then [0]
@@ -156,7 +100,6 @@ function scan(a) =
         ss = scan({e+o: e in es; o in os})
     in interleave(ss,{s+e: s in ss; e in es})
 \end{verbatim}
-\end{quote}
 \vspace{1ex}
 {\scriptsize
 \hspace{2.5in}\href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.53.5739}{Source: Guy Blelloch in \emph{Programming parallel algorithms, 1990}}}
@@ -166,17 +109,66 @@ Still, why does it work?
 \end{frame}
 
 \begin{frame}{Realization}
-\begin{center}
 \Large
+\vspace{11ex}
+\begin{center}
 \emph{It's not naturally an array algorithm.}
 \end{center}
+\pause
+\vspace{6ex}
+What is it?
+\pause
+Hints:
+
+\begin{itemize}
+\item Size must be a power of two.
+\item Work: $O (n)$, depth: $O (\log n)$.
+\end{itemize}
+
 \end{frame}
 
 \rnc\SourceModule{Code}
 
-\begin{frame}{First guess}
-\source{Guess1}
+%format totu = u"_{"tot"}"
+%format totv = v"_{"tot"}"
+
+\begin{frame}{Wrong guess}
+\vspace{6.4ex}
+\begin{code}
+data T a = L a | B (T a) (T a)
+\end{code}
+\vspace{3in}
 \end{frame}
+
+\begin{frame}{Wrong guess}
+\vfill
+\begin{code}
+data T a = L a | B (T a) (T a) deriving functor
+\end{code}
+\vfill
+\begin{code}
+scanT :: Monoid a => T a -> (T a , a)
+scanT (L x)    = (L mempty , x)
+scanT (B u v)  = (B u' (fmap (totu <> NOP) v') , totu <> totv)
+  where
+    (u', totu)  = scanT u
+    (v', totv)  = scanT v
+\end{code}
+\vfill
+Work: $O (n \log n)$, depth: $O (\log n)$.
+\end{frame}
+
+\begin{frame}{Right guess}
+\begin{code}
+data P a = P a a
+
+data T a = L a | B (T (P a))
+\end{code}
+
+\vspace{5ex}
+Work: $O (n)$, depth: $O (\log n)$.
+\end{frame}
+
 
 \nc\scanT{\text{scanᵀ}}
 \nc\scanA{\text{scanᴬ}}
@@ -187,12 +179,10 @@ Still, why does it work?
 \nc\Arr[2]{\text{Arr}_{#1}\, #2}
 
 \begin{frame}{Correctness}
-
 \[\begin{tikzcd}
-  \BT n a \arR{\scanT} \BT n a \\
-  \Arr{2^n}a \arUR{\parse}{\scanA} \Arr{2^n}a \arU{\parse}
+  \BT n a \arR{\scanT} \BT n a × a \\
+  \Arr{2^n}a \arUR{\parse}{\scanA} \Arr{2^n}a × a \arU{\parse ⊗ \id}
 \end{tikzcd}\]
-
 \end{frame}
 
 \end{document}
