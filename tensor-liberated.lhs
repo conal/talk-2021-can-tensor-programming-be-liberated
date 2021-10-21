@@ -84,9 +84,27 @@
 \end{center}
 \end{frame}
 
+\begin{frame}{Efficient parallel prefix (left scan), 16 elements}
+\begin{center}
+\wpicture{5in}{lsums-lt4}
+\end{center}
+\end{frame}
+
+\begin{frame}{Efficient parallel prefix (left scan), 32 elements}
+\begin{center}
+\wpicture{5in}{lsums-lt5}
+\end{center}
+\end{frame}
+
+\begin{frame}{Efficient parallel prefix (left scan), 64 elements}
+\begin{center}
+\wpicture{5in}{lsums-lt6}
+\end{center}
+\end{frame}
+
 \begin{frame}{An efficient array program (CUDA C)}
 \vspace{0.5ex}
-\hspace{1in}\wpicture{4.35in}{cuda-and-beaker.pdf}
+\hspace{1in}\wpicture{4.35in}{cuda-and-beaker}
 \end{frame}
 
 \begin{frame}[fragile]{In NESL}
@@ -104,8 +122,8 @@ function scan(a) =
 {\scriptsize
 \hspace{2.5in}\href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.53.5739}{Source: Guy Blelloch in \emph{Programming parallel algorithms, 1990}}}
 
-\pause\vspace{2ex}
-Still, why does it work?
+\pause\vspace{4ex}
+Still, why does it work, and how does it (correctly) generalize?
 \end{frame}
 
 \begin{frame}{Realization}
@@ -115,73 +133,110 @@ Still, why does it work?
 \emph{It's not naturally an array algorithm.}
 \end{center}
 \pause
-\vspace{6ex}
+\vspace{11ex}
 What is it?
-\pause
-Hints:
-
-\begin{itemize}
-\item Size must be a power of two.
-\item Work: $O (n)$, depth: $O (\log n)$.
-\end{itemize}
-
 \end{frame}
 
 \rnc\SourceModule{Code}
 
-%format totu = u"_{"tot"}"
-%format totv = v"_{"tot"}"
+\nc\down{{\scriptscriptstyle ↓}}
+\nc\up{{\scriptscriptstyle ↑}}
+\nc\Arr[2]{\textit{Arr}\ {#1}\  #2}
 
-\begin{frame}{Wrong guess}
-\vspace{6.4ex}
-\begin{code}
-data T a = L a | B (T a) (T a)
-\end{code}
-\vspace{3in}
-\end{frame}
+%format Td = T"\down"
+%format scanTd = scanT"\down"
+%format utot = u"_{"tot"}"
+%format vtot = v"_{"tot"}"
 
-\begin{frame}{Wrong guess}
-\vfill
-\begin{code}
-data T a = L a | B (T a) (T a) deriving functor
-\end{code}
-\vfill
-\begin{code}
-scanT :: Monoid a => T a -> (T a , a)
-scanT (L x)    = (L mempty , x)
-scanT (B u v)  = (B u' (fmap (totu <> NOP) v') , totu <> totv)
-  where
-    (u', totu)  = scanT u
-    (v', totv)  = scanT v
-\end{code}
-\vfill
-Work: $O (n \log n)$, depth: $O (\log n)$.
-\end{frame}
-
-\begin{frame}{Right guess}
-\begin{code}
-data P a = P a a
-
-data T a = L a | B (T (P a))
-\end{code}
-
-\vspace{5ex}
-Work: $O (n)$, depth: $O (\log n)$.
-\end{frame}
-
-
-\nc\scanT{\text{scanᵀ}}
-\nc\scanA{\text{scanᴬ}}
-\nc\parse{\text{parse}}
 \nc\id{\text{id}}
-%% \nc\T[2]{\text{Tree}_{#1}\, #2}
-\nc\BT[2]{2^{\uparrow #1}\, #2}
-\nc\Arr[2]{\text{Arr}_{#1}\, #2}
+\nc\scanA{\textit{scanA}}
 
-\begin{frame}{Correctness}
-\[\begin{tikzcd}
-  \BT n a \arR{\scanT} \BT n a × a \\
-  \Arr{2^n}a \arUR{\parse}{\scanA} \Arr{2^n}a × a \arU{\parse ⊗ \id}
+\begin{frame}{Wrong guess: top-down binary trees}
+\vspace{5ex}
+\begin{code}
+data Td a = L a | B (Td a) (Td a)
+\end{code}
+\vspace{-2ex}
+\pause
+\begin{code}
+deriving instance Functor Td
+
+scanTd :: Monoid a => Td a -> (Td a , a)
+scanTd (L x)    = (L mempty , x)
+scanTd (B u v)  = (B u' ((utot SPC <>) <#> v') , utot <> vtot)
+  where
+    (u'  , utot  ) = scanTd u
+    (v'  , vtot  ) = scanTd v
+\end{code}\\
+\vspace{2ex}
+Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{frame}
+
+\nc\scanTd{\textit{scanT}\up}
+\nc\parsed{\textit{parse}\up}
+\nc\BTd[2]{T\up\ #1\ #2}
+
+\begin{frame}{But right answer}
+\[\begin{tikzcd}[column sep = 12em, row sep = 8em]
+  \BTd n a \arR{\scanTd} \BTd n a × a \\
+  \Arr{2^n}a \arUR{\parsed}{\scanA} \Arr{2^n}a × a \arU{\parsed ⊗ \id}
+\end{tikzcd}\]
+\end{frame}
+
+\begin{frame}{Wrong guess refactored (top-down binary trees)}
+\vspace{0ex}
+\begin{code}
+data P a = a :# a
+
+data Td a = L a | B (P (Td a)) deriving Functor
+\end{code}
+\vspace{2.5ex}
+\begin{code}
+scanTd :: Monoid a => Td a -> (Td a , a)
+scanTd (L x) = (L mempty , x)
+scanTd (B (u :# v)) = (B (u' :# (utot SPC <>) <#> v') , utot <> vtot)
+  where
+    (u'  , utot  ) = scanTd u
+    (v'  , vtot  ) = scanTd v
+\end{code}\\
+\vspace{2ex}
+Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{frame}
+
+%format Tu = T"\up"
+%format scanTu = scanT"\up"
+%format zipWithTu = zipWith"\up"
+%format unzipTu = unzip"\up"
+
+\begin{frame}{Right guess: bottom-up, perfect binary trees}
+\begin{code}
+data P a = a :# a
+
+data Tu a = L a | B (Tu (P a)) deriving Functor
+
+scanP :: Monoid a => P a -> (P a , a)
+scanP (x :# y) = (mempty :# x , y)
+
+scanTu :: Monoid a => Tu a -> (Tu a , a)
+scanTu (L  x   ) = (L mempty , x)
+scanTu (B  ts  ) = (B (zipWithTu tweak tots' ts'), tot)
+  where
+    (ts' , tots)   = unzipTu (scanP <#> ts)
+    (tots' , tot)  = scanTu tots
+    tweak t        = fmap (t SPC <>)
+\end{code}\\
+Work: $O (n)$, depth: $O (\lg n)$.
+Many easy optimizations.
+\end{frame}
+
+\nc\scanTu{\textit{scanT}\up}
+\nc\parseu{\textit{parse}\up}
+\nc\BTu[2]{T\up\ #1\ #2}
+
+\begin{frame}{\emph{And} right answer}
+\[\begin{tikzcd}[column sep = 12em, row sep = 8em]
+  \BTu n a \arR{\scanTu} \BTu n a × a \\
+  \Arr{2^n}a \arUR{\parseu}{\scanA} \Arr{2^n}a × a \arU{\parseu ⊗ \id}
 \end{tikzcd}\]
 \end{frame}
 

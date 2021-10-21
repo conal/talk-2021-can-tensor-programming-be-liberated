@@ -1,0 +1,149 @@
+% -*- tex -*-
+%% Misc lhs2TeX directives
+
+%format family = "\mathbf{family}"
+
+%% spaces (in 18ths of a quad): \, = 3, \: = 4, \; = 5, \! = -3
+%format liftA2
+
+%format NOP = "{}"
+
+%format =~ = " \simeq "
+
+%% optional double-dollar spelling, to avoid $ confusing emacs latex-mode.
+%format <$$> = <$>
+%format <#> = <$>
+%format <$$ = <$
+%format <# = <$
+
+%format <$> = "\mathbin{<\!\!\!\$\!\!\!>}"
+%format <$ = "\mathbin{<\!\!\!\$}"
+%format <*> = "\mathbin{<\!\!\!*\!\!\!>}"
+
+%% %format <*> = "\circledast"
+
+%% hack: add missing space, e.g., before "{" in data type decl
+%format SPC = "\, {}"
+%format SPACE = "\ {}"
+%format NOP = "{}"
+
+%% %format mempty = "\emptyset"
+%format mempty = "\varepsilon"
+%format <> = " \oplus "
+%format `mappend` = " \oplus "
+%format mappend = "(\oplus)"
+
+%format :* = " \times "
+%format :+ = " + "
+
+%format @ = "{\ @}"
+%format @@ = "@"
+
+%format ~> = " \leadsto "
+
+%format (toCCC (e)) = "\db{" e "}"
+
+%format ~ = "\mathbin{\sim}"
+
+%format BACKex = "\hspace{-1ex}"
+%format BACKquad = "\hspace{-2.2ex}"
+
+%format  N0 =  0
+%format  N1 =  1
+%format  N2 =  2
+%format  N3 =  3
+%format  N4 =  4
+%format  N5 =  5
+%format  N6 =  6
+%format  N7 =  7
+%format  N8 =  8
+%format  N9 =  9
+%format  N0 =  0
+%format N11 = 11
+%format N12 = 12
+%format N13 = 13
+%format N14 = 14
+%format N15 = 15
+%format N16 = 16
+
+
+%% spaces (in 18ths of a quad): \, = 3, \: = 4, \; = 5, \! = -3
+
+%format :*: = "\btimes"
+%format :+: = "\bplus"
+%format :.: = "\bcomp"
+
+%% \pmb and \boldsymbol for these symbols look alike to me.
+
+%% %format :*: = " \boldsymbol{\times} "
+%% %format :+: = " \boldsymbol{+} "
+%% %format :.: = " \boldsymbol{\circ} "
+
+%% %format :*: = "\mathbin{\times_1}"
+%% %format :+: = "\mathbin{+_1}"
+%% %format :.: = "\mathbin{\circ_1}"
+
+%format R = "\mathbb{R}"
+%format C = "\mathbb{C}"
+
+%format <$> = "\mathbin{<\!\!\!\$\!\!\!>}"
+%format <*> = "\mathbin{<\!\!\!*\!\!\!>}"
+
+%format <.> = "\cdot"
+%format $@ = "\mathbin{\hat\$}"
+%% %format $@ = "\mathbin{\$\!@}"
+
+%format Generic1
+%format Rep1
+%format from1
+%format to1
+%format V1
+%format U1
+%format Par1
+%format Comp1
+%format unComp1
+%format L1
+%format R1 = "\Varid{R}_1"
+
+%format Par1 = "\Varid{I}_1"
+%format unPar1 = "\Varid{unI}_1"
+
+%format V1 = V
+%format U1 = U
+%format Par1 = I
+%format unPar1 = unI
+%format L1 = L
+%format R1 = "\Varid{R}"
+
+%format Comp1 = "\Varid{O}_1"
+%format unComp1 = "\Varid{unO}_1"
+
+%format :# = "\mathbin{:\!\!\#}"
+
+%format FFO = Reverse
+
+%format (RVec (n)) = "\overrightarrow{"n"}"
+%format (LVec (n)) = "\overleftarrow{"n"}"
+
+%% %format (RPow (h) (n)) = h"^{\overrightarrow{"n"}}"
+%% %format (LPow (h) (n)) = h"^{\overleftarrow{"n"}}"
+
+%format (RPow (h) (n)) = h"^{\downarrow"n"}"
+%format (LPow (h) (n)) = h"^{\uparrow"n"}"
+
+%format Pair = 2
+
+%format (Pow (h) (n)) = h"^{"n"}"
+
+%% %format (Bush (n)) = pow 2 (pow 2 n)
+%% %format pow a b = a"^{"b"}"
+%format (pow (a) (b)) = a"^{"b"}"
+
+%format (Bush (n)) = "2^{2^{"n"}}"
+
+%format Z = 0
+%format S  n = n + 1
+%format S' n = 1 + n
+
+%% \setlength{\blanklineskip}{0.66084ex}
+\setlength{\blanklineskip}{2ex}

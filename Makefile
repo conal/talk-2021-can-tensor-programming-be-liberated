@@ -18,7 +18,19 @@ latex/%: %
 	@mkdir -p $(dir $@)
 	cp $< $@
 
-latex/%.pdf: $(LATEX_DEPENDENCIES) latex/%.tex
+dots = $(wildcard Figures/*.dot)
+pdfs = $(addsuffix .pdf, $(basename $(dots)))
+
+# Cap the size so that LaTeX doesn't choke.
+Figures/%.pdf: Figures/%.dot # Makefile
+	dot -Tpdf -Gmargin=0 -Gsize=10,10 $< -o $@
+
+pdfs: $(pdfs)
+
+test:
+	@echo $(pdfs)
+
+latex/%.pdf: $(LATEX_DEPENDENCIES) latex/%.tex $(pdfs)
 	cd latex && latexmk -xelatex -bibtex $*.tex
 	@touch $@
 
