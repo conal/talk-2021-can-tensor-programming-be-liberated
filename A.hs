@@ -1,12 +1,16 @@
+{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# OPTIONS_GHC -Wall #-}
+
+infixr 6 ×
+type a × b = (a , b)
 
 data Td a = L a | B (Td a) (Td a)
 
 deriving instance Functor Td
 
-scanTd :: Monoid a => Td a -> (Td a , a)
+scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)
 scanTd (B u v) = (B u' (fmap (ou <>) v') , ou <> ov)
  where

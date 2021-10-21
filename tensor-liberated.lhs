@@ -75,28 +75,34 @@
 
 \pause
 \vspace{5.5ex}
-\emph{Every Unix program contains a parser (from text) and unparser (to text).}
+\emph{Every nontrivial Unix program contains a parser (from text) and unparser (to text).}
 \end{frame}
 
 \begin{frame}{Likewise,}
+\vfill
 \begin{center}
-\emph{Every array program contains a parser (from arrays) and unparser (to arrays).}
+\emph{Every nontrivial array program contains a parser (from arrays) and unparser (to arrays).}
 \end{center}
+\vfill
 \end{frame}
 
-\begin{frame}{Efficient parallel prefix (left scan), 16 elements}
+\definecolor{statColor}{rgb}{0,0,0.2}
+
+\nc\stats[3]{\hfill \small \textcolor{statColor}{size: #1, work: #2, depth: #3}\hspace{1.5ex}}
+
+\begin{frame}{Efficient parallel prefix (left scan) \stats{16}{27}{6}}
 \begin{center}
 \wpicture{5in}{lsums-lt4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Efficient parallel prefix (left scan), 32 elements}
+\begin{frame}{Efficient parallel prefix (left scan) \stats{32}{58}{8}}
 \begin{center}
 \wpicture{5in}{lsums-lt5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Efficient parallel prefix (left scan), 64 elements}
+\begin{frame}{Efficient parallel prefix (left scan) \stats{64}{121}{10}}
 \begin{center}
 \wpicture{5in}{lsums-lt6}
 \end{center}
@@ -161,15 +167,21 @@ data Td a = L a | B (Td a) (Td a)
 \begin{code}
 deriving instance Functor Td
 
-scanTd :: Monoid a => Td a -> (Td a , a)
+scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x)    = (L mempty , x)
-scanTd (B u v)  = (B u' ((utot SPC <>) <#> v') , utot <> vtot)
+scanTd (B u v)  = (B u' (fmap (utot SPC <>) v') , utot <> vtot)
   where
     (u'  , utot  ) = scanTd u
     (v'  , vtot  ) = scanTd v
 \end{code}\\
 \vspace{2ex}
 Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{frame}
+
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{32}{81}{5}}
+\begin{center}
+\wpicture{5in}{lsums-rt5}
+\end{center}
 \end{frame}
 
 \nc\scanTd{\textit{scanT}\up}
@@ -192,9 +204,9 @@ data Td a = L a | B (P (Td a)) deriving Functor
 \end{code}
 \vspace{2.5ex}
 \begin{code}
-scanTd :: Monoid a => Td a -> (Td a , a)
+scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)
-scanTd (B (u :# v)) = (B (u' :# (utot SPC <>) <#> v') , utot <> vtot)
+scanTd (B (u :# v)) = (B (u' :# fmap (utot SPC <>) v') , utot <> vtot)
   where
     (u'  , utot  ) = scanTd u
     (v'  , vtot  ) = scanTd v
@@ -214,14 +226,14 @@ data P a = a :# a
 
 data Tu a = L a | B (Tu (P a)) deriving Functor
 
-scanP :: Monoid a => P a -> (P a , a)
+scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanTu :: Monoid a => Tu a -> (Tu a , a)
+scanTu :: Monoid a => Tu a -> Tu a × a
 scanTu (L  x   ) = (L mempty , x)
 scanTu (B  ts  ) = (B (zipWithTu tweak tots' ts'), tot)
   where
-    (ts' , tots)   = unzipTu (scanP <#> ts)
+    (ts' , tots)   = unzipTu (fmap scanP ts)
     (tots' , tot)  = scanTu tots
     tweak t        = fmap (t SPC <>)
 \end{code}\\
