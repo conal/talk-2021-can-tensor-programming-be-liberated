@@ -8,12 +8,10 @@ LATEX_DEPENDENCIES:= \
   latex/macros.tex \
   latex/commands.tex \
   latex/unicode.tex \
-  latex/Blank.tex
-  latex/Code.tex
 
 PRECIOUS: $(LATEX_DEPENDENCIES) latex/$(TALK).tex
 
-latex/%.tex: %.lhs macros.tex Makefile
+latex/%.tex: %.lhs macros.tex formatting.fmt Makefile
 	lhs2TeX -o $@ $<
 
 latex/%: %
