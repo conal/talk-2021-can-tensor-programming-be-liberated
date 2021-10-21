@@ -4,9 +4,17 @@ TALK=tensor-liberated
 all: latex/$(TALK).pdf
 
 LATEX_DEPENDENCIES:= \
-  latex/macros.tex
+  latex/agda.sty \
+  latex/macros.tex \
+  latex/commands.tex \
+  latex/unicode.tex \
+  latex/Blank.tex
+  latex/Code.tex
 
 PRECIOUS: $(LATEX_DEPENDENCIES) latex/$(TALK).tex
+
+latex/%.tex: %.lhs macros.tex Makefile
+	lhs2TeX -o $@ $<
 
 latex/%: %
 	@mkdir -p $(dir $@)

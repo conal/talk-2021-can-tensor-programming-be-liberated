@@ -77,8 +77,10 @@ What old talks do I have for source material, and what do I want to add?
 *   "Parsing" indices --- index isomorphisms
 *   Trie structures (exponentials) and their isomorphisms
 
-*   Our mental habits are trained by archaic technology
+Miscellany:
 
+*   Quote from Dijkstra's "The Humble Programmer"
+*   Our mental habits are trained by archaic technology
 *   Optimization is important, but it obscures clarity and thwarts composability, so do it late.
 
 
