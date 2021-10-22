@@ -96,17 +96,11 @@
 \end{center}
 \end{frame}
 
-\begin{frame}{Efficient parallel prefix (left scan) \stats{32}{58}{8}}
-\begin{center}
-\wpicture{5in}{lsums-lt5}
-\end{center}
-\end{frame}
-
-\begin{frame}{Efficient parallel prefix (left scan) \stats{64}{121}{10}}
-\begin{center}
-\wpicture{5in}{lsums-lt6}
-\end{center}
-\end{frame}
+%% \begin{frame}{Efficient parallel prefix (left scan) \stats{32}{58}{8}}
+%% \begin{center}
+%% \wpicture{5in}{lsums-lt5}
+%% \end{center}
+%% \end{frame}
 
 \begin{frame}{An efficient array program (CUDA C)}
 \vspace{0.5ex}
@@ -157,7 +151,7 @@ What is it?
 \nc\id{\text{id}}
 \nc\scanA{\textit{scanA}}
 
-\begin{frame}{Wrong guess: top-down binary trees}
+\begin{frame}{Wrong guess: top-down, binary, leaf trees}
 \vspace{5ex}
 \begin{code}
 data Td a = L a | B (Td a) (Td a)
@@ -208,15 +202,13 @@ Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{tikzcd}\]
 \end{frame}
 
-\begin{frame}{Wrong guess refactored (top-down binary trees)}
-\vspace{0ex}
+\begin{frame}{Wrong guess refactored}
+\vspace{-0.3ex}
 \begin{code}
-data P a = a :# a
+data P a = a :# a deriving Functor
 
 data Td a = L a | B (P (Td a)) deriving Functor
-\end{code}
-\vspace{2.5ex}
-\begin{code}
+
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)
 scanTd (B (u :# v)) = (B (u' :# fmap (utot SPC <>) v') , utot <> vtot)
@@ -228,12 +220,36 @@ scanTd (B (u :# v)) = (B (u' :# fmap (utot SPC <>) v') , utot <> vtot)
 Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
+\begin{frame}{Wrong guess refactored again}
+\vspace{-0.3ex}
+\begin{code}
+data P a = a :# a deriving Functor
+
+data Td a = L a | B (P (Td a)) deriving Functor
+
+scanP :: Monoid a => P a -> P a × a
+scanP (x :# y) = (mempty :# x , y)
+
+scanTd :: Monoid a => Td a -> Td a × a
+scanTd (L x) = (L mempty , x)
+scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
+  where
+    (ts', tots)   = unzipP (fmap scanTd ts)
+    (tots', tot)  = scanP tots
+    tweak x       = fmap (x SP <>)
+\end{code}
+\\
+\vspace{2ex}
+Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{frame}
+
+
 %format Tu = T"\up"
 %format scanTu = scanT"\up"
 %format zipWithTu = zipWith"\up"
 %format unzipTu = unzip"\up"
 
-\begin{frame}{Right guess: bottom-up, perfect binary trees}
+\begin{frame}{Right guess: bottom-up, perfect, binary, leaf trees}
 \begin{code}
 data P a = a :# a
 
@@ -243,12 +259,12 @@ scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
 scanTu :: Monoid a => Tu a -> Tu a × a
-scanTu (L  x   ) = (L mempty , x)
-scanTu (B  ts  ) = (B (zipWithTu tweak tots' ts'), tot)
+scanTu (L x) = (L mempty , x)
+scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
   where
-    (ts' , tots)   = unzipTu (fmap scanP ts)
-    (tots' , tot)  = scanTu tots
-    tweak t        = fmap (t SPC <>)
+    (ps', tots)   = unzipTu (fmap scanP ps)
+    (tots', tot)  = scanTu tots
+    tweak x       = fmap (x SPC <>)
 \end{code}\\
 Work: $O (n)$, depth: $O (\lg n)$.
 Many easy optimizations.
@@ -257,6 +273,24 @@ Many easy optimizations.
 \nc\scanTu{\textit{scanT}\up}
 \nc\parseu{\textit{parse}\up}
 \nc\BTu[2]{T\up\ #1\ #2}
+
+\begin{frame}{Work-efficient parallel prefix (left scan) \stats{16}{27}{6}}
+\begin{center}
+\wpicture{5in}{lsums-lt4}
+\end{center}
+\end{frame}
+
+\begin{frame}{Work-efficient parallel prefix (left scan) \stats{32}{58}{8}}
+\begin{center}
+\wpicture{5in}{lsums-lt5}
+\end{center}
+\end{frame}
+
+\begin{frame}{Work-efficient parallel prefix (left scan) \stats{64}{121}{10}}
+\begin{center}
+\wpicture{5in}{lsums-lt6}
+\end{center}
+\end{frame}
 
 \begin{frame}{\emph{And} right answer}
 \[\begin{tikzcd}[column sep = 12em, row sep = 8em]

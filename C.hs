@@ -1,33 +1,30 @@
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeOperators, DeriveFunctor, CPP #-}
 {-# OPTIONS_GHC -Wall #-}
-{-# OPTIONS_GHC -Wno-unused-imports #-} -- TEMP
-{-# LANGUAGE DeriveFunctor #-}
+
+#define SPC
 
 infixr 6 ×
 type a × b = (a , b)
 
 data P a = a :# a deriving Functor
 
-data Tu a = L a | B (Tu (P a)) deriving Functor
+data Td a = L a | B (P (Td a)) deriving Functor
 
-zipWithT :: (a -> b -> c) -> (Tu a -> Tu b -> Tu c)
-zipWithT = undefined
+zipWithP :: (a -> b -> c) -> (P a -> P b -> P c)
+zipWithP = undefined
 
--- zipWithT f (L x) (L y) = L (f x y)
--- zipWithT f (B us) (B vs) = B (fmap (\ (x :# y) -> f x y)
+unzipP :: P (a × b) -> P a × P b
+unzipP = undefined
 
-unzipT :: Tu (a , b) -> Tu a × Tu b
-unzipT = undefined
-
--- Oh! I can't define zipWithT sensibly without matching shapes.
+-- Oh! I can't define zipWithP without matching shapes (depth indices).
 
 scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanT :: Monoid a => Tu a -> Tu a × a
-scanT (L x) = (L mempty , x)
-scanT (B ts) = (B (zipWithT tweak tots' ts'), tot)
+scanTd :: Monoid a => Td a -> Td a × a
+scanTd (L x) = (L mempty , x)
+scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
   where
-    (ts', tots)   = unzipT (fmap scanP ts)
-    (tots', tot)  = scanT tots
-    tweak t       = fmap (t <>)
+    (ts', tots)   = unzipP (fmap scanTd ts)
+    (tots', tot)  = scanP tots
+    tweak x       = fmap (x SPC <>)
