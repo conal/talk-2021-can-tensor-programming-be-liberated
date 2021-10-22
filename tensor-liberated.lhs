@@ -75,15 +75,18 @@
 
 \pause
 \vspace{5.5ex}
-\emph{Many Unix programs contain a parser (from text) and unparser (to text).}
+\emph{Many Unix programs contain an entangled parser (from text) and unparser (to text).}
 \end{frame}
 
 \begin{frame}{Likewise,}
+\vspace{10ex}
 \vfill
-\begin{center}
-\emph{Many array programs contain a parser (from arrays) and unparser (to arrays).}
+\begin{center} \em
+Many array programs contain a parser (from arrays) and unparser (to arrays).
 \end{center}
 \vfill
+\vspace{10ex}
+Disentangling improves clarity and suggests improvements.
 \end{frame}
 
 \definecolor{statColor}{rgb}{0,0,0.2}

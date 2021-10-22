@@ -74,8 +74,16 @@ What old talks do I have for source material, and what do I want to add?
 *   Correctness:
     *   Commutative diagram with natural type and algorithm above and array below
 
-*   "Parsing" indices --- index isomorphisms
-*   Trie structures (exponentials) and their isomorphisms
+*   FFT decomposes similarly, yielding classic DIT & DIF algorithms.
+    See [*Generic functional parallel algorithms: Scan and FFT*].
+
+*   Generalizing:
+    *   The heart of parallel scan/FFT is scan/FFT on `Id`, products, and compositions.
+    *   Decomposing yields infinite family of *correct* parallel algorithms on tries.
+    *   All such tries are isomorphic (parsing/unparsing) to arrays.
+
+*   Index isomorphisms
+*   Trie isomorphisms
 
 Miscellany:
 
