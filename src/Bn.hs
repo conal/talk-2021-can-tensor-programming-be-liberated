@@ -14,7 +14,7 @@ deriving instance Functor (Td d)
 
 scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
-scanTd (B (u :# v)) = (B (u' :# fmap (totu <>) v') , totu <> totv)
+scanTd (B (u :# v)) = (B (u' :# fmap (utot <>) v') , utot <> vtot)
   where
-    (u', totu)  = scanTd u
-    (v', totv)  = scanTd v
+    (u', utot)  = scanTd u
+    (v', vtot)  = scanTd v

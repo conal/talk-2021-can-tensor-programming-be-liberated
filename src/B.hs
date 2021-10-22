@@ -10,7 +10,7 @@ data Td a = L a | B (P (Td a)) deriving Functor
 
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)
-scanTd (B (u :# v)) = (B (u' :# fmap (totu <>) v') , totu <> totv)
+scanTd (B (u :# v)) = (B (u' :# fmap (utot <>) v') , utot <> vtot)
   where
-    (u', totu)  = scanTd u
-    (v', totv)  = scanTd v
+    (u', utot)  = scanTd u
+    (v', vtot)  = scanTd v
