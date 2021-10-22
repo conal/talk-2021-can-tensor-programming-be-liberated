@@ -6,9 +6,13 @@ import Misc
 
 data P a = a :# a deriving Functor
 
-data Td a = L a | B (P (Td a)) deriving Functor
+data Td :: Nat -> * -> * where
+  L  :: a -> Td Zero a
+  B  :: P (Td d a) -> Td (Succ d) a
 
-scanTd :: Monoid a => Td a -> Td a × a
+deriving instance Functor (Td d)
+
+scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
 scanTd (B (u :# v)) = (B (u' :# fmap (totu <>) v') , totu <> totv)
   where

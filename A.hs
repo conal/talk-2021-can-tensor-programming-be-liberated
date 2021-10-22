@@ -1,19 +1,18 @@
-{-# LANGUAGE TypeOperators, DeriveFunctor, CPP #-}
+{-# LANGUAGE TypeOperators, DeriveFunctor, DataKinds, GADTs
+           , StandaloneDeriving,  KindSignatures #-}
 {-# OPTIONS_GHC -Wall #-}
 
-#define SPC
+import Misc
 
-infixr 6 ×
-type a × b = (a , b)
+data Td :: * -> * where
+  L  :: a -> Td a
+  B  :: Td a -> Td a -> Td a
 
-data Td a = L a | B (Td a) (Td a)
-  deriving Functor
-
-type Z = [] SPC ()
+deriving instance Functor Td
 
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)
-scanTd (B u v) = (B u' (fmap (totu SPC <>) v') , totu <> totv)
- where
-   (u', totu) = scanTd u
-   (v', totv) = scanTd v
+scanTd (B u v) = (B u' (fmap (totu ⊕) v') , totu <> totv)
+  where
+    (u'  , utot  ) = scanTd u
+    (v'  , vtot  ) = scanTd v

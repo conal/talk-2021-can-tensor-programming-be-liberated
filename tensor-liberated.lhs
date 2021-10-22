@@ -75,13 +75,13 @@
 
 \pause
 \vspace{5.5ex}
-\emph{Every nontrivial Unix program contains a parser (from text) and unparser (to text).}
+\emph{Many Unix programs contain a parser (from text) and unparser (to text).}
 \end{frame}
 
 \begin{frame}{Likewise,}
 \vfill
 \begin{center}
-\emph{Every nontrivial array program contains a parser (from arrays) and unparser (to arrays).}
+\emph{Many array programs contain a parser (from arrays) and unparser (to arrays).}
 \end{center}
 \vfill
 \end{frame}
@@ -133,44 +133,83 @@ Still, why does it work, and how does it (correctly) generalize?
 \emph{It's not naturally an array algorithm.}
 \end{center}
 \pause
-\vspace{11ex}
+\vspace{12ex}
+\large
 What is it?
 \end{frame}
 
-\rnc\SourceModule{Code}
+\nc\Q[2]{Q\ #1\ #2}
+\nc\id{\text{id}}
+\nc\scanA{\textit{scanA}}
+\nc\Arr[2]{\textit{Arr}\ {#1}\  #2}
+
+\nc\parseQ{\textit{parseQ}}
+\nc\scanQ{\textit{scanQ}}
+
+\begin{frame}{Clarifying the question}
+\vspace{4ex}
+\[\begin{tikzcd}[column sep = 13em, row sep = 8em]
+  \Q d a \arR{\scanQ} \Q d a \\
+  \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a \arU{\parseQ}
+\end{tikzcd}\]\\[6ex]
+Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.
+\end{frame}
+
+\begin{frame}{A compositional refinement}
+\vspace{4ex}
+\[\begin{tikzcd}[column sep = 12em, row sep = 8em]
+  \Q d a \arR{\scanQ} \Q d a × a \\
+  \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a × a \arU{\parseQ ⊗ \id}
+\end{tikzcd}\]\\[6ex]
+Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is \end{frame}
 
 \nc\down{{\scriptscriptstyle ↓}}
 \nc\up{{\scriptscriptstyle ↑}}
-\nc\Arr[2]{\textit{Arr}\ {#1}\  #2}
 
 %format Td = T"\down"
 %format scanTd = scanT"\down"
 %format utot = u"_{"tot"}"
 %format vtot = v"_{"tot"}"
 
-\nc\id{\text{id}}
-\nc\scanA{\textit{scanA}}
-
 \begin{frame}{Wrong guess: top-down, binary, leaf trees}
-\vspace{5ex}
 \begin{code}
-data Td a = L a | B (Td a) (Td a)
+data Td :: * -> * NOP where
+  L  :: a -> Td a
+  B  :: Td a -> Td a -> Td a
 \end{code}
-\vspace{-7ex}
+\vspace{-5.5ex}
 \pause
 \begin{code}
-SPC SPC deriving instance Functor
-\end{code}
-\begin{code}
+deriving instance Functor
+
+SPC
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x)    = (L mempty , x)
-scanTd (B u v)  = (B u' (fmap (utot SPC <>) v') , utot <> vtot)
+scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
   where
     (u'  , utot  ) = scanTd u
     (v'  , vtot  ) = scanTd v
-\end{code}\\
-\vspace{2ex}
-Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{code}
+\hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
+\end{frame}
+
+\begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect}, leaf trees}
+\begin{code}
+data Td :: Nat -> * -> * NOP where
+  L  :: a -> Td Zero a
+  B  :: Td d a -> Td d a -> Td (Succ d) a
+
+deriving instance Functor (Td d)
+
+SPC
+scanTd :: Monoid a => Td d a -> Td d a × a
+scanTd (L x)    = (L mempty , x)
+scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
+  where
+    (u'  , utot  ) = scanTd u
+    (v'  , vtot  ) = scanTd v
+\end{code}
+\hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
 \begin{frame}{Work-inefficient parallel prefix (left scan) \stats{16}{33}{4}}
@@ -191,87 +230,94 @@ Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{center}
 \end{frame}
 
-\nc\scanTd{\textit{scanT}\up}
-\nc\parsed{\textit{parse}\up}
-\nc\BTd[2]{T\up\ #1\ #2}
+\nc\scanTd{\textit{scanT}\down}
+\nc\parsed{\textit{parseT}\down}
+\nc\BTd[2]{T\down\ #1\ #2}
 
 \begin{frame}{But right answer}
 \[\begin{tikzcd}[column sep = 12em, row sep = 8em]
-  \BTd n a \arR{\scanTd} \BTd n a × a \\
-  \Arr{2^n}a \arUR{\parsed}{\scanA} \Arr{2^n}a × a \arU{\parsed ⊗ \id}
+  \BTd d a \arR{\scanTd} \BTd d a × a \\
+  \Arr{2^d}a \arUR{\parsed}{\scanA} \Arr{2^d}a × a \arU{\parsed ⊗ \id}
 \end{tikzcd}\]
 \end{frame}
 
 \begin{frame}{Wrong guess refactored}
-\vspace{-0.3ex}
+\vspace{-1ex}
 \begin{code}
 data P a = a :# a deriving Functor
 
-data Td a = L a | B (P (Td a)) deriving Functor
+data Td :: Nat -> * -> * NOP where
+  L  :: a -> Td Zero a
+  B  :: P (Td d a) -> Td (Succ d) a
+deriving instance Functor (Td d)
 
-scanTd :: Monoid a => Td a -> Td a × a
+SPC
+SPC
+
+scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
-scanTd (B (u :# v)) = (B (u' :# fmap (utot SPC <>) v') , utot <> vtot)
+scanTd (B (u :# v)) = (B (u' :# fmap (totu <>) v') , totu <> totv)
   where
     (u'  , utot  ) = scanTd u
     (v'  , vtot  ) = scanTd v
-\end{code}\\
-\vspace{2ex}
-Work: $O (n \lg n)$, depth: $O (\lg n)$.
+    SPC
+\end{code}
 \end{frame}
 
 \begin{frame}{Wrong guess refactored again}
-\vspace{-0.3ex}
+\vspace{-1ex}
 \begin{code}
 data P a = a :# a deriving Functor
 
-data Td a = L a | B (P (Td a)) deriving Functor
+data Td :: Nat -> * -> * NOP where
+  L  :: a -> Td Zero a
+  B  :: P (Td d a) -> Td (Succ d) a
+deriving instance Functor (Td d)
 
 scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanTd :: Monoid a => Td a -> Td a × a
+scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
 scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
   where
     (ts', tots)   = unzipP (fmap scanTd ts)
     (tots', tot)  = scanP tots
-    tweak x       = fmap (x SP <>)
+    tweak x       = fmap (x ⊕)
 \end{code}
-\\
-\vspace{2ex}
-Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
-
 
 %format Tu = T"\up"
 %format scanTu = scanT"\up"
-%format zipWithTu = zipWith"\up"
-%format unzipTu = unzip"\up"
+%format zipWithTu = zipWithT"\up"
+%format unzipTu = unzipT"\up"
 
-\begin{frame}{Right guess: bottom-up, perfect, binary, leaf trees}
+\begin{frame}{Right guess: \emph{bottom-up}, perfect, binary, leaf trees}
+\vspace{-1ex}
 \begin{code}
-data P a = a :# a
+data P a = a :# a deriving Functor
 
-data Tu a = L a | B (Tu (P a)) deriving Functor
+data Tu :: Nat -> * -> * where
+  L  :: a -> Tu Zero a
+  B  :: Tu n (P a) -> Tu (Succ n) a
+deriving instance Functor (Tu n)
 
 scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanTu :: Monoid a => Tu a -> Tu a × a
+scanTu :: Monoid a => Tu n a -> Tu n a × a
 scanTu (L x) = (L mempty , x)
 scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
   where
     (ps', tots)   = unzipTu (fmap scanP ps)
     (tots', tot)  = scanTu tots
-    tweak x       = fmap (x SPC <>)
+    tweak x       = fmap (x ⊕)
 \end{code}\\
-Work: $O (n)$, depth: $O (\lg n)$.
-Many easy optimizations.
+\hfill Work: $O (n)$, depth: $O (\lg n)$.
 \end{frame}
 
 \nc\scanTu{\textit{scanT}\up}
-\nc\parseu{\textit{parse}\up}
+\nc\parseu{\textit{parseT}\up}
 \nc\BTu[2]{T\up\ #1\ #2}
 
 \begin{frame}{Work-efficient parallel prefix (left scan) \stats{16}{27}{6}}
@@ -294,8 +340,8 @@ Many easy optimizations.
 
 \begin{frame}{\emph{And} right answer}
 \[\begin{tikzcd}[column sep = 12em, row sep = 8em]
-  \BTu n a \arR{\scanTu} \BTu n a × a \\
-  \Arr{2^n}a \arUR{\parseu}{\scanA} \Arr{2^n}a × a \arU{\parseu ⊗ \id}
+  \BTu d a \arR{\scanTu} \BTu d a × a \\
+  \Arr{2^d}a \arUR{\parseu}{\scanA} \Arr{2^d}a × a \arU{\parseu ⊗ \id}
 \end{tikzcd}\]
 \end{frame}
 

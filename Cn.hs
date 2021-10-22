@@ -6,7 +6,10 @@ import Misc
 
 data P a = a :# a deriving Functor
 
-data Td a = L a | B (P (Td a)) deriving Functor
+data Td :: Nat -> * -> * where
+  L  :: a -> Td Zero a
+  B  :: P (Td d a) -> Td (Succ d) a
+deriving instance Functor (Td d)
 
 zipWithP :: (a -> b -> c) -> (P a -> P b -> P c)
 zipWithP = undefined
@@ -14,12 +17,10 @@ zipWithP = undefined
 unzipP :: P (a × b) -> P a × P b
 unzipP = undefined
 
--- Oh! I can't define zipWithP without matching shapes (depth indices).
-
 scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanTd :: Monoid a => Td a -> Td a × a
+scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
 scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
   where

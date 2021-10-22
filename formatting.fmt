@@ -30,6 +30,8 @@
 %% %format mempty = "\emptyset"
 %format mempty = "\varepsilon"
 %format <> = " \oplus "
+%format ⊕ = "\ \oplus "
+%% %format <> = " \mathop{\oplus} "
 %format `mappend` = " \oplus "
 %format mappend = "(\oplus)"
 
