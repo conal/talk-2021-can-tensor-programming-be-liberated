@@ -176,7 +176,7 @@ Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is \end{
 
 \begin{frame}{Wrong guess: top-down, binary, leaf trees}
 \begin{code}
-data Td :: * -> * NOP where
+data Td :: Type -> Type where
   L  :: a -> Td a
   B  :: Td a -> Td a -> Td a
 \end{code}
@@ -196,9 +196,19 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
+%format Succ = Suc
+
 \begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect}, leaf trees}
+\begin{textblock}{128}[1,0](350,45)
+\begin{tcolorbox}
+\mathindent1ex
 \begin{code}
-data Td :: Nat -> * -> * NOP where
+data Nat = Zero | Succ Nat
+\end{code}
+\end{tcolorbox}
+\end{textblock}
+\begin{code}
+data Td :: Nat -> Type -> Type where
   L  :: a -> Td Zero a
   B  :: Td d a -> Td d a -> Td (Succ d) a
 
@@ -249,7 +259,7 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \begin{code}
 data P a = a :# a deriving Functor
 
-data Td :: Nat -> * -> * NOP where
+data Td :: Nat -> Type -> Type where
   L  :: a -> Td Zero a
   B  :: P (Td d a) -> Td (Succ d) a
 deriving instance Functor (Td d)
@@ -272,7 +282,7 @@ scanTd (B (u :# v)) = (B (u' :# fmap (utot <>) v') , utot <> vtot)
 \begin{code}
 data P a = a :# a deriving Functor
 
-data Td :: Nat -> * -> * NOP where
+data Td :: Nat -> Type -> Type where
   L  :: a -> Td Zero a
   B  :: P (Td d a) -> Td (Succ d) a
 deriving instance Functor (Td d)
@@ -300,7 +310,7 @@ scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
 \begin{code}
 data P a = a :# a deriving Functor
 
-data Tu :: Nat -> * -> * where
+data Tu :: Nat -> Type -> Type where
   L  :: a -> Tu Zero a
   B  :: Tu n (P a) -> Tu (Succ n) a
 deriving instance Functor (Tu n)
@@ -346,6 +356,46 @@ scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
   \BTu d a \arR{\scanTu} \BTu d a × a \\
   \Arr{2^d}a \arUR{\parseu}{\scanA} \Arr{2^d}a × a \arU{\parseu ⊗ \id}
 \end{tikzcd}\]
+\end{frame}
+
+\begin{frame}{FFT}\parskip6ex
+FFT decomposes similarly, yielding classic DIT \& DIF algorithms.
+
+See \href{http://conal.net/papers/generic-parallel-functional/}{\em Generic functional parallel algorithms: Scan and FFT} (ICFP 2017).
+\end{frame}
+
+\begin{frame}{Generalizing}\parskip6ex
+The heart of parallel scan/FFT is scan/FFT on |Id|, products, and compositions.
+
+Simple decomposition yields infinite family of \emph{correct} parallel algorithms on tries.
+
+All such tries are isomorphic to arrays (``parsing/unparsing'').
+\end{frame}
+
+%format Void = "\mathbf{0}"
+%format Unit = "\mathbf{1}"
+
+\begin{frame}{Index isomorphisms}
+\begin{code}
+data Fin :: Nat -> Type where
+  ZeroF  :: Fin (Succ n)
+  SuccF  :: Fin n -> Fin (Succ n)
+\end{code}
+\pause
+\begin{center}
+\begin{code}
+Fin 0          ≅ Void
+
+Fin 1          ≅ Unit
+
+Fin (m  +  n)  ≅ Fin m  ⊎   Fin n
+
+Fin (m  *  n)  ≅ Fin m  ×   Fin n
+\end{code}
+\end{center}
+\end{frame}
+
+\begin{frame}{Trie isomorphisms}
 \end{frame}
 
 \end{document}

@@ -3,6 +3,8 @@
 
 module Misc where
 
+type Unit = ()
+
 infixr 6 ×
 type a × b = (a , b)
 

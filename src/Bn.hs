@@ -2,11 +2,12 @@
            , CPP, StandaloneDeriving,  KindSignatures #-}
 {-# OPTIONS_GHC -Wall -Wno-unticked-promoted-constructors #-}
 
+import Data.Kind
 import Misc
 
 data P a = a :# a deriving Functor
 
-data Td :: Nat -> * -> * where
+data Td :: Nat -> Type -> Type where
   L  :: a -> Td Zero a
   B  :: P (Td d a) -> Td (Succ d) a
 

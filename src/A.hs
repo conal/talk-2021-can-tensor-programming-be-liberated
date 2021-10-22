@@ -1,10 +1,11 @@
 {-# LANGUAGE TypeOperators, DeriveFunctor, DataKinds, GADTs
            , StandaloneDeriving,  KindSignatures #-}
-{-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC -Wall -Wno-unticked-promoted-constructors #-}
 
+import Data.Kind
 import Misc
 
-data Td :: * -> * where
+data Td :: Type -> Type where
   L  :: a -> Td a
   B  :: Td a -> Td a -> Td a
 

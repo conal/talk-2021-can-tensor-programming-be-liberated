@@ -6,3 +6,20 @@
 \nc\SourceModule{None}
 
 \nc\source[1]{\ExecuteMetaData[\SourceModule.tex]{#1}}
+
+\definecolor{mylinkcolor}{rgb}{0,0,0.5}
+\hypersetup{
+  linkcolor  = mylinkcolor,
+  citecolor  = mylinkcolor,
+  urlcolor   = mylinkcolor,
+  colorlinks = true, % false
+}
+
+\usepackage[many]{tcolorbox}
+
+\tcbset{enhanced,boxrule=0.5pt,colframe=black!50!blue,colback=white,boxsep=-2pt,drop fuzzy shadow}
+
+\usepackage[absolute,overlay]{textpos}  % ,showboxes
+
+%% Needs tweaking for 16x9
+\TPGrid{364}{273} %% roughly page size in points

@@ -2,6 +2,7 @@
            , CPP, StandaloneDeriving,  KindSignatures #-}
 {-# OPTIONS_GHC -Wall -Wno-unticked-promoted-constructors #-}
 
+import Data.Kind
 import Misc
 
 data P a = a :# a deriving Functor
