@@ -554,4 +554,54 @@ type family (RPow h n) where
 \end{code}
 \end{frame}
 
+\begin{frame}{Bushes}
+\begin{code}
+type family (Bush n) where
+  Bush Z      = Pair
+  Bush (S n)  = Bush n :. Bush n
+\end{code}
+
+%format Bush' = "\Varid{Bush}"
+%format twon = "2^n"
+Notes:
+\begin{itemize}
+\item Variation of |Bush'| type in \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.184.8120}{\emph{Nested Datatypes}} by Bird \& Meertens.
+\item Size $2^{2^n}$, i.e., $2, 4, 16, 256, 65536, \ldots$.
+\item Composition-balanced counterpart to |LPow 2 twon| and |RPow 2 twon|.
+\item Easily generalizes beyond pairing and squaring.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Bush FFT \stats{size}{work}{depth}}
+\begin{center}
+\wpic{fft-bush2}
+\end{center}
+\end{frame}
+
+
+%% \framet{|fft @(Bush N0)|}{\vspace{-6.0ex}\wfig{4.8in}{circuits/fft-bush0}}
+%% \framet{|fft @(Bush N1)|}{\vspace{-7.0ex}\wfig{4.8in}{circuits/fft-bush1}}
+%% \framet{|fft @(Bush N2)|}{\vspace{-7.5ex}\wfig{4.8in}{circuits/fft-bush2}}
+%% \framet{|fft @(Bush N3)|}{\vspace{-8.0ex}\wfig{4.8in}{circuits/fft-bush3}}
+
+%% \framet{Comparison}{
+
+%% For 16 complex inputs and results:
+
+%% \fftStats{
+%%   \stat{|RPow Pair N4|}{74}{40}{74}{197}{8}
+%%   \stat{|LPow Pair N4|}{74}{40}{74}{197}{8}
+%%   \stat{|Bush      N2|}{72}{32}{72}{186}{6}
+%% }
+
+%% For 256 complex inputs and results:
+
+%% \fftStats{
+%%   \stat{|RPow Pair N8|}{2690}{2582}{2690}{8241}{20}
+%%   \stat{|LPow Pair N8|}{2690}{2582}{2690}{8241}{20}
+%%   \stat{|Bush      N3|}{2528}{1922}{2528}{7310}{14}
+%% }
+
+%% }
+
 \end{document}
