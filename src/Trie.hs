@@ -11,7 +11,7 @@ import Misc
 
 data  U           a = U
 
-data  Id          a = Id a
+data  I           a = I a
 
 data  (f  :*  g)  a = X (f a) (g a)
 
@@ -25,7 +25,7 @@ data  (g  :.  f)  a = O (g (f a))
 
 Arr 0          ≅ U
 
-Arr 1          ≅ Id
+Arr 1          ≅ I
 
 Arr (m  +  n)  ≅ Arr m  :*  Arr n
 
@@ -46,7 +46,7 @@ type One = Succ Zero
 
 zero  :: Arr Zero ≅ U
 
-one   :: Arr One ≅ Id
+one   :: Arr One ≅ I
 
 (+~)  :: Arr m ≅ f -> Arr n ≅ g -> Arr (m  +  n) ≅ f  :*  g
 

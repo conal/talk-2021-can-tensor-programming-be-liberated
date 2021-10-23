@@ -9,19 +9,19 @@ data P a = a :# a deriving Functor
 
 data Tu :: Nat -> Type -> Type where
   L  :: a -> Tu Zero a
-  B  :: Tu n (P a) -> Tu (Succ n) a
-deriving instance Functor (Tu n)
+  B  :: Tu d (P a) -> Tu (Succ d) a
+deriving instance Functor (Tu d)
 
-zipWithTu :: (a -> b -> c) -> (Tu n a -> Tu n b -> Tu n c)
+zipWithTu :: (a -> b -> c) -> (Tu d a -> Tu d b -> Tu d c)
 zipWithTu = undefined
 
-unzipTu :: Tu n (a , b) -> Tu n a × Tu n b
+unzipTu :: Tu d (a , b) -> Tu d a × Tu d b
 unzipTu = undefined
 
 scanP :: Monoid a => P a -> P a × a
 scanP (x :# y) = (mempty :# x , y)
 
-scanTu :: Monoid a => Tu n a -> Tu n a × a
+scanTu :: Monoid a => Tu d a -> Tu d a × a
 scanTu (L x) = (L mempty , x)
 scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
   where

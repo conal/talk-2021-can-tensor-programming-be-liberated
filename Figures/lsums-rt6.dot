@@ -3,7 +3,7 @@ digraph lsums_rt6 {
   node [shape=Mrecord];
   bgcolor=transparent;
   nslimit=20;
-  ranksep="10.6";
+  ranksep="12";
   c0 [label="{{<In0>|<In1>}|+|{<Out0>}}"];
   c1 [label="{{<In0>|<In1>}|+|{<Out0>}}"];
   c2 [label="{{<In0>|<In1>}|+|{<Out0>}}"];
