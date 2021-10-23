@@ -35,8 +35,8 @@
 %format `mappend` = " \oplus "
 %format mappend = "(\oplus)"
 
-%format :* = " \times "
-%format :+ = " + "
+%% %format :* = " \times "
+%% %format :+ = " + "
 
 %format @ = "{\ @}"
 %format @@ = "@"
@@ -71,9 +71,8 @@
 
 %% spaces (in 18ths of a quad): \, = 3, \: = 4, \; = 5, \! = -3
 
-%format :*: = "\btimes"
-%format :+: = "\bplus"
-%format :.: = "\bcomp"
+%format :* = "\times"
+%format :. = "\circ"
 
 %% \pmb and \boldsymbol for these symbols look alike to me.
 

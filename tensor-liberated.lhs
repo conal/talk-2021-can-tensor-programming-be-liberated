@@ -19,7 +19,7 @@
 \usepackage{catchfilebetweentags}
 \usepackage[useregional]{datetime2}
 
-\RequirePackage{agda, tikz-cd, newunicodechar, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
+\RequirePackage{tikz-cd, newunicodechar, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
 
 \input{macros}
 %% \input{commands}
@@ -372,30 +372,77 @@ Simple decomposition yields infinite family of \emph{correct} parallel algorithm
 All such tries are isomorphic to arrays (``parsing/unparsing'').
 \end{frame}
 
-%format Void = "\mathbf{0}"
-%format Unit = "\mathbf{1}"
+%% %format ≅ = "\mathrel{\hat\cong}"
 
-\begin{frame}{Index isomorphisms}
+\begin{frame}{Trie algebra and isomorphisms}
+\mathindent1ex
+\begin{minipage}[t]{0.3\textwidth}
 \begin{code}
-data Fin :: Nat -> Type where
-  ZeroF  :: Fin (Succ n)
-  SuccF  :: Fin n -> Fin (Succ n)
+data  U           a = U
+
+data  Id          a = Id a
+
+data  (f  :*  g)  a = X (f a) (g a)
+
+data  (g  :.  f)  a = O (g (f a))
 \end{code}
+\end{minipage}
 \pause
-\begin{center}
+\hspace{0.1\textwidth}
+\begin{minipage}[t]{0.4\textwidth}
+\setlength{\blanklineskip}{2.3ex}
 \begin{code}
-Fin 0          ≅ Void
+Arr 0          ≅ U
 
-Fin 1          ≅ Unit
+Arr 1          ≅ Id
 
-Fin (m  +  n)  ≅ Fin m  ⊎   Fin n
+Arr (m  +  n)  ≅ Arr m  :*  Arr n
 
-Fin (m  *  n)  ≅ Fin m  ×   Fin n
+Arr (m  *  n)  ≅ Arr n  :.  Arr m
 \end{code}
-\end{center}
+\end{minipage}
+\vspace{8.5ex}
 \end{frame}
 
-\begin{frame}{Trie isomorphisms}
+%format +~ = "\tilde+"
+%format *~ = "\tilde*"
+%format zero = "\tilde0"
+%format one = "\tilde1"
+
+\begin{frame}{Trie algebra and \emph{constructive} isomorphisms}
+\vspace{5ex}
+\mathindent1ex
+\begin{minipage}[t]{0.3\textwidth}
+\begin{code}
+data  U           a = U
+
+data  Id          a = Id a
+
+data  (f  :*  g)  a = X (f a) (g a)
+
+data  (g  :.  f)  a = O (g (f a))
+\end{code}
+\end{minipage}
+\hspace{0.1\textwidth}
+\begin{minipage}[t]{0.4\textwidth}
+\setlength{\blanklineskip}{1.9ex}
+\begin{code}
+zero  :: Arr 0 ≅ U
+
+one   :: Arr 1 ≅ Id
+
+(+~)  :: Arr m ≅ f -> Arr n ≅ g -> Arr (m  +  n) ≅ f  :*  g
+
+(*~)  :: Arr m ≅ f -> Arr n ≅ g -> Arr (m  *  n) ≅ g  :.  f
+\end{code}
+\end{minipage}
+\begin{center}
+\begin{code}
+data (≅) :: (Type -> Type) -> (Type -> Type) -> Type where
+  Iso :: (forall a . f a -> g a) -> (forall a . g a -> f a) -> f ≅ g
+  -- Plus isomorphism proof
+\end{code}
+\end{center}
 \end{frame}
 
 \end{document}

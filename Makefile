@@ -4,9 +4,7 @@ TALK=tensor-liberated
 all: latex/$(TALK).pdf
 
 LATEX_DEPENDENCIES:= \
-  latex/agda.sty \
   latex/macros.tex \
-  latex/commands.tex \
   latex/unicode.tex \
 
 PRECIOUS: $(LATEX_DEPENDENCIES) latex/$(TALK).tex
