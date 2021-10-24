@@ -156,21 +156,39 @@ What is it?
 \nc\scanQ{\textit{scanQ}}
 
 \begin{frame}{Clarifying the question}
+\vspace{21ex}
+\[\begin{tikzcd}[column sep = 13em, row sep = 8em]
+  \Arr{2^d}a \arR{\scanA} \Arr{2^d}a
+\end{tikzcd}\]
+\end{frame}
+
+\begin{frame}{Clarifying the question}
+\vspace{4ex}
+\[\begin{tikzcd}[column sep = 13em, row sep = 8em]
+  \Q d a \arR{\scanQ} \Q d a \\
+  \Arr{2^d}a \arR{\scanA} \Arr{2^d}a
+\end{tikzcd}\]\\[6ex]
+\textcolor{white}{Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.}
+\end{frame}
+
+\begin{frame}{Clarifying the question}
 \vspace{4ex}
 \[\begin{tikzcd}[column sep = 13em, row sep = 8em]
   \Q d a \arR{\scanQ} \Q d a \\
   \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a \arU{\parseQ}
 \end{tikzcd}\]\\[6ex]
+\pause
 Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.
 \end{frame}
 
 \begin{frame}{A compositional refinement}
 \vspace{4ex}
-\[\begin{tikzcd}[column sep = 12em, row sep = 8em]
+\[\begin{tikzcd}[column sep = 13em, row sep = 8em]
   \Q d a \arR{\scanQ} \Q d a × a \\
   \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a × a \arU{\parseQ ⊗ \id}
 \end{tikzcd}\]\\[6ex]
-Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is \end{frame}
+Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.
+\end{frame}
 
 \nc\down{{\scriptscriptstyle ↓}}
 \nc\up{{\scriptscriptstyle ↑}}
