@@ -35,7 +35,7 @@
 %format `mappend` = " \oplus "
 %format mappend = "(\oplus)"
 
-%% %format :* = " \times "
+%% %format :* = " \boldsymbol{\times} "
 %% %format :+ = " + "
 
 %format @ = "{\ @}"

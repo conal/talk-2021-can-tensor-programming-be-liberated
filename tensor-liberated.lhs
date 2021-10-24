@@ -19,7 +19,7 @@
 \usepackage{catchfilebetweentags}
 \usepackage[useregional]{datetime2}
 
-\RequirePackage{tikz-cd, newunicodechar, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
+\RequirePackage{tikz-cd, newunicodechar, amsmath, amsfonts, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
 
 \input{macros}
 %% \input{commands}
@@ -409,25 +409,25 @@ FFT decomposes similarly, yielding classic DIT \& DIF algorithms.
 See \href{http://conal.net/papers/generic-parallel-functional/}{\em Generic functional parallel algorithms: Scan and FFT} (ICFP 2017).
 \end{frame}
 
-\begin{frame}{Top-down tree FFT \stats{16}{197}{8}}
+\begin{frame}{Top-down tree FFT \stats{16}{188}{8}}
 \begin{center}
 \wpic{fft-rb4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree FFT \stats{16}{197}{8}}
+\begin{frame}{Bottom-up tree FFT \stats{16}{188}{8}}
 \begin{center}
 \wpic{fft-lb4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Top-down tree FFT \stats{32}{539}{11}}
+\begin{frame}{Top-down tree FFT \stats{32}{524}{11}}
 \begin{center}
 \wpic{fft-rb5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree FFT \stats{32}{539}{11}}
+\begin{frame}{Bottom-up tree FFT \stats{32}{524}{11}}
 \begin{center}
 \wpic{fft-lb5}
 \end{center}
