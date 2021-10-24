@@ -13,6 +13,7 @@
 % \useoutertheme{infolines}
 % Suppress navigation arrows
 \setbeamertemplate{navigation symbols}{}
+%% \setbeamertemplate{footline}{}
 
 \setbeamersize{text margin left=.5cm,text margin right=.5cm}
 
@@ -22,8 +23,8 @@
 \RequirePackage{tikz-cd, newunicodechar, amsmath, amsfonts, amssymb, stmaryrd, unicode-math, setspace, comment, listings, anyfontsize}
 
 \input{macros}
-%% \input{commands}
 \input{unicode}
+
 
 %include polycode.fmt
 %include forall.fmt
@@ -49,9 +50,44 @@
 \author{Conal Elliott}
 \date{October 2021}
 
+% https://tex.stackexchange.com/questions/83048/change-the-contents-of-footline-in-a-beamer-presentation
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Oxford Tensor Programming Seminar
+  \end{beamercolorbox}%
+  }
+  \vskip0pt%
+}
+
+\makeatother
+
 \begin{document}
 
 \maketitle
+
+% https://tex.stackexchange.com/questions/83048/change-the-contents-of-footline-in-a-beamer-presentation
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}Conal Elliott
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}Can Tensor Programming Be Liberated from the Fortran Data Paradigm?
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
 
 \begin{frame}{``This is the Unix philosophy:}
 \begin{itemize}\itemsep4ex
