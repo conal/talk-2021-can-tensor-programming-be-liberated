@@ -90,7 +90,7 @@ Miscellany:
 *   What makes a type "natural" for an algorithm is the simplicity of expressing the algorithm and proof in terms of that type.
     The goal is to factor the array function in a standard way as `unparse ∘ f ∘ parse` where `f` is simple and general.
 *   Quote from Dijkstra's "The Humble Programmer"
-*   Our mental habits are trained by archaic technology
+*   Our mental habits are trained by archaic technology.
 *   Optimization is important, but it obscures clarity and thwarts composability, so do it late.
 
 

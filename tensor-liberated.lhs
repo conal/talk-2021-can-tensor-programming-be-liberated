@@ -99,10 +99,13 @@ Disentangling improves clarity and suggests improvements.
 \end{center}
 \end{frame}
 
-\begin{frame}{Efficient parallel prefix (left scan) \stats{16}{27}{6}}
+\begin{frame}{Efficient \emph{parallel} prefix (left scan) \stats{16}{27}{6}}
 \begin{center}
 \wpic{lsums-lt4}
 \end{center}
+
+\vspace{-5.5ex}
+\hfill Work: $O (n)$, depth: $O (\lg n)$.\\[0ex]{\ }
 \end{frame}
 
 %% \begin{frame}{Efficient parallel prefix (left scan) \stats{32}{58}{8}}
@@ -113,7 +116,7 @@ Disentangling improves clarity and suggests improvements.
 
 \begin{frame}{An efficient array program (CUDA C)}
 \vspace{0.5ex}
-\hspace{1in}\wpicture{4.35in}{cuda-and-beaker}
+\hspace{10ex}\wpicture{4.35in}{cuda-and-beaker}
 \end{frame}
 
 \begin{frame}[fragile]{In NESL}
@@ -168,7 +171,7 @@ What is it?
   \Q d a \arR{\scanQ} \Q d a \\
   \Arr{2^d}a \arR{\scanA} \Arr{2^d}a
 \end{tikzcd}\]\\[6ex]
-\textcolor{white}{Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.}
+\textcolor{white}{Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.}
 \end{frame}
 
 \begin{frame}{Clarifying the question}
@@ -178,7 +181,7 @@ What is it?
   \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a \arU{\parseQ}
 \end{tikzcd}\]\\[6ex]
 \pause
-Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.
+Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.
 \end{frame}
 
 \begin{frame}{A compositional refinement}
@@ -187,7 +190,7 @@ Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formu
   \Q d a \arR{\scanQ} \Q d a × a \\
   \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a × a \arU{\parseQ ⊗ \id}
 \end{tikzcd}\]\\[6ex]
-Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic.
+Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.
 \end{frame}
 
 \nc\down{{\scriptscriptstyle ↓}}
@@ -281,7 +284,7 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \end{frame}
 
 \begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect}, leaf trees}
-\vspace{-1.8ex}
+\vspace{-1.9ex}
 \begin{code}
 SPC
 SPC
@@ -433,41 +436,77 @@ FFT decomposes similarly, yielding classic DIT \& DIF algorithms.
 See \href{http://conal.net/papers/generic-parallel-functional/}{\em Generic functional parallel algorithms: Scan and FFT} (ICFP 2017).
 \end{frame}
 
-\begin{frame}{Top-down tree FFT \stats{16}{188}{8}}
+\begin{frame}{Top-down tree FFT (DIT) \stats{16}{188}{8}}
 \begin{center}
 \wpic{fft-rb4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree FFT \stats{16}{188}{8}}
+\begin{frame}{Bottom-up tree FFT (DIF) \stats{16}{188}{8}}
 \begin{center}
 \wpic{fft-lb4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Top-down tree FFT \stats{32}{524}{11}}
+\begin{frame}{Top-down tree FFT (DIT) \stats{32}{524}{11}}
 \begin{center}
 \wpic{fft-rb5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree FFT \stats{32}{524}{11}}
+\begin{frame}{Bottom-up tree FFT (DIF) \stats{32}{524}{11}}
 \begin{center}
 \wpic{fft-lb5}
 \end{center}
 \end{frame}
 
 \begin{frame}{Generalizing}\parskip6ex
-The heart of parallel scan/FFT is scan/FFT on singleton, products, and compositions.
+Re-express parallel algorithm via singletons, products, and \emph{compositions}.
 
-Simple decomposition yields infinite family of \emph{correct} parallel algorithms on tries.
+Recomposing yields infinite family of \emph{correct} parallel algorithms on tries.
 
-All such tries are isomorphic to arrays (``parsing/unparsing'').
+All such tries are isomorphic to arrays (``unparsing/parsing'').
 \end{frame}
 
 %% %format ≅ = "\mathrel{\hat\cong}"
 
-\begin{frame}{Trie algebra and isomorphisms}
+%format Void = "\mathbf{0}"
+%format Unit = "\mathbf{1}"
+
+\begin{frame}{Index isomorphisms}
+\begin{textblock}{120}[1,0](340,55)
+\begin{tcolorbox}
+\small
+\mathindent-0.5ex
+\vspace{-1.5ex}
+\begin{code}
+data Fin :: Nat -> Type where
+  ZeroF  :: Fin (Succ n)
+  SuccF  :: Fin n -> Fin (Succ n)
+\end{code}
+\vspace{-4ex}
+\end{tcolorbox}
+\end{textblock}
+\vspace{6ex}
+\begin{code}
+Arr n a ≅ Fin n → a
+\end{code}
+\pause
+\vspace{0ex}
+\begin{center}
+\begin{code}
+Fin 0          ≅ Void
+
+Fin 1          ≅ Unit
+
+Fin (m  +  n)  ≅ Fin m  +   Fin n
+
+Fin (m  *  n)  ≅ Fin m  ×   Fin n
+\end{code}
+\end{center}
+\end{frame}
+
+\begin{frame}{Exponentials: trie algebra and isomorphisms}
 \mathindent1ex
 \begin{minipage}[t]{0.3\textwidth}
 \begin{code}
@@ -531,6 +570,7 @@ one   :: Arr 1 ≅ I
 \end{minipage}
 \begin{center}
 \begin{code}
+-- ``Parse/unparse''
 data (≅) :: (Type -> Type) -> (Type -> Type) -> Type where
   Iso :: (forall a . f a -> g a) -> (forall a . g a -> f a) -> f ≅ g
   -- Plus isomorphism proof
@@ -578,6 +618,9 @@ type family (RPow h n) where
 \end{code}
 \end{frame}
 
+%format Bush' = "\Varid{Bush}"
+%format twon = "2^n"
+
 \begin{frame}{Bushes}
 \begin{code}
 type family (Bush n) where
@@ -585,9 +628,8 @@ type family (Bush n) where
   Bush (S n)  = Bush n :. Bush n
 \end{code}
 
-%format Bush' = "\Varid{Bush}"
-%format twon = "2^n"
 Notes:
+\rnc{\baselinestretch}{1.4}
 \begin{itemize}
 \item Variation of |Bush'| type in \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.184.8120}{\emph{Nested Datatypes}} by Bird \& Meertens.
 \item Size $2^{2^n}$, i.e., $2, 4, 16, 256, 65536, \ldots$.
@@ -641,6 +683,23 @@ Size 256:\\[2ex]
   \fftStat{|LPow 2 N8|}{2690}{2582}{2690}{7692}{20}
   \fftStat{|Bush   N3|}{2528}{1922}{2528}{6978}{14}
 }
+\end{frame}
+
+\begin{frame}{Conclusions}
+\rnc{\baselinestretch}{1.7}
+\begin{itemize}
+\item Alternative to array programming:
+  \begin{itemize}
+  %% \item Elegantly compositional.
+  \item Reveals algorithm essence, connections, and generalizations.
+  \item Free of index computations (safe and uncluttered).
+  \item Translates to array program safely and systematically.
+  \end{itemize}
+\item Four well-known parallel algorithms: |RPow h n|, |LPow h n|. % perfect trees
+\item Two possibly new and useful algorithms: |Bush n|. % bushes
+\item Other examples: arithmetic, linear algebra, polynomials, bitonic sort.
+\item \emph{Optimization matters but harms clarity and composability, so do it late}.
+\end{itemize}
 \end{frame}
 
 \end{document}

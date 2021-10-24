@@ -6,6 +6,7 @@ module Fin where
 
 import Misc
 
+-- "Finite sets"
 data Fin :: Nat -> * where
   ZeroF  :: Fin (Succ n)
   SuccF  :: Fin n -> Fin (Succ n)
