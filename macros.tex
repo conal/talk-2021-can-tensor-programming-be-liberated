@@ -25,3 +25,18 @@
 
 %% Needs tweaking for 16x9
 \TPGrid{364}{273} %% roughly page size in points
+
+
+\newcommand{\fftStat}[6]{
+#1 & #2 & #3 & #4 & #5 & #6 \\ \hline
+}
+\newcommand{\fftStats}[1]{
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+  \hline
+  \fftStat{Type}{$+$}{$\times$}{$-$}{total}{max depth} \hline
+  #1
+  \hline
+\end{tabular}
+\end{center}
+}

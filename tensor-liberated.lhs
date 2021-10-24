@@ -409,13 +409,13 @@ FFT decomposes similarly, yielding classic DIT \& DIF algorithms.
 See \href{http://conal.net/papers/generic-parallel-functional/}{\em Generic functional parallel algorithms: Scan and FFT} (ICFP 2017).
 \end{frame}
 
-\begin{frame}{Top-down tree FFT \stats{16}{194}{8}}
+\begin{frame}{Top-down tree FFT \stats{16}{197}{8}}
 \begin{center}
 \wpic{fft-rb4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree FFT \stats{16}{194}{8}}
+\begin{frame}{Bottom-up tree FFT \stats{16}{197}{8}}
 \begin{center}
 \wpic{fft-lb4}
 \end{center}
@@ -572,36 +572,32 @@ Notes:
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Bush FFT \stats{size}{work}{depth}}
+\begin{frame}{Bush FFT \stats{16}{176}{6}}
 \begin{center}
 \wpic{fft-bush2}
 \end{center}
 \end{frame}
 
+%format Pair = P
 
-%% \framet{|fft @(Bush N0)|}{\vspace{-6.0ex}\wfig{4.8in}{circuits/fft-bush0}}
-%% \framet{|fft @(Bush N1)|}{\vspace{-7.0ex}\wfig{4.8in}{circuits/fft-bush1}}
-%% \framet{|fft @(Bush N2)|}{\vspace{-7.5ex}\wfig{4.8in}{circuits/fft-bush2}}
-%% \framet{|fft @(Bush N3)|}{\vspace{-8.0ex}\wfig{4.8in}{circuits/fft-bush3}}
+\begin{frame}{Comparison}
 
-%% \framet{Comparison}{
+For 16 complex inputs and results:
 
-%% For 16 complex inputs and results:
+\fftStats{
+  \fftStat{|RPow 2 N4|}{74}{40}{74}{188}{8}
+  \fftStat{|LPow 2 N4|}{74}{40}{74}{188}{8}
+  \fftStat{|Bush   N2|}{72}{32}{72}{176}{6}
+}
 
-%% \fftStats{
-%%   \stat{|RPow Pair N4|}{74}{40}{74}{197}{8}
-%%   \stat{|LPow Pair N4|}{74}{40}{74}{197}{8}
-%%   \stat{|Bush      N2|}{72}{32}{72}{186}{6}
-%% }
+For 256 complex inputs and results:
 
-%% For 256 complex inputs and results:
+\fftStats{
+  \fftStat{|RPow 2 N8|}{2690}{2582}{2690}{7692}{20}
+  \fftStat{|LPow 2 N8|}{2690}{2582}{2690}{7692}{20}
+  \fftStat{|Bush   N3|}{2528}{1922}{2528}{6978}{14}
+}
 
-%% \fftStats{
-%%   \stat{|RPow Pair N8|}{2690}{2582}{2690}{8241}{20}
-%%   \stat{|LPow Pair N8|}{2690}{2582}{2690}{8241}{20}
-%%   \stat{|Bush      N3|}{2528}{1922}{2528}{7310}{14}
-%% }
-
-%% }
+\end{frame}
 
 \end{document}
