@@ -93,6 +93,12 @@ Disentangling improves clarity and suggests improvements.
 
 \nc\stats[3]{\hfill \small \textcolor{statColor}{size: #1, work: #2, depth: #3}\hspace{1.5ex}}
 
+\begin{frame}{Linear prefix sum (left scan) \stats{16}{15}{15}}
+\begin{center}
+\wpic{lsums-lv16}
+\end{center}
+\end{frame}
+
 \begin{frame}{Efficient parallel prefix (left scan) \stats{16}{27}{6}}
 \begin{center}
 \wpic{lsums-lt4}
