@@ -27,6 +27,21 @@
 \TPGrid{364}{273} %% roughly page size in points
 
 
+\newcommand{\scanStat}[3]{
+#1 & #2 & #3 \\ \hline
+}
+\newcommand{\scanStats}[1]{
+\begin{center}
+\begin{tabular}{|c|c|c|}
+  \hline
+  \scanStat{Type}{operations}{depth} \hline
+  #1
+  \hline
+\end{tabular}
+%\vspace{0.25ex}
+\end{center}
+}
+
 \newcommand{\fftStat}[6]{
 #1 & #2 & #3 & #4 & #5 & #6 \\ \hline
 }

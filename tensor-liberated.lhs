@@ -227,19 +227,19 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{16}{33}{4}}
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{16}{32}{4}}
 \begin{center}
 \wpic{lsums-rt4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{32}{81}{5}}
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{32}{80}{5}}
 \begin{center}
 \wpic{lsums-rt5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{64}{193}{6}}
+\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{64}{192}{6}}
 \begin{center}
 \wpic{lsums-rt6}
 \end{center}
@@ -367,37 +367,37 @@ scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
 \end{tikzcd}\]
 \end{frame}
 
-\begin{frame}{Top-down tree scan \stats{16}{33}{4}}
+\begin{frame}{Top-down tree scan \stats{16}{32}{4}}
 \begin{center}
 \wpic{lsums-rt4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree scan \stats{16}{27}{6}}
+\begin{frame}{Bottom-up tree scan \stats{16}{26}{6}}
 \begin{center}
 \wpic{lsums-lt4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Top-down tree scan \stats{32}{81}{5}}
+\begin{frame}{Top-down tree scan \stats{32}{80}{5}}
 \begin{center}
 \wpic{lsums-rt5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree scan \stats{32}{58}{8}}
+\begin{frame}{Bottom-up tree scan \stats{32}{57}{8}}
 \begin{center}
 \wpic{lsums-lt5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Top-down tree scan \stats{64}{193}{6}}
+\begin{frame}{Top-down tree scan \stats{64}{192}{6}}
 \begin{center}
 \wpic{lsums-rt6}
 \end{center}
 \end{frame}
 
-\begin{frame}{Bottom-up tree scan \stats{64}{121}{10}}
+\begin{frame}{Bottom-up tree scan \stats{64}{120}{10}}
 \begin{center}
 \wpic{lsums-lt6}
 \end{center}
@@ -572,32 +572,51 @@ Notes:
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Bush scan \stats{16}{29}{5}}
+\begin{center}
+\wpic{lsums-bush2}
+\end{center}
+\end{frame}
+
 \begin{frame}{Bush FFT \stats{16}{176}{6}}
 \begin{center}
 \wpic{fft-bush2}
 \end{center}
 \end{frame}
 
-%format Pair = P
+\begin{frame}{Scan comparison}
+Size 16:\\[2ex]
+\scanStats{
+  \scanStat{|RPow 2 N4|}{32}{4}
+  \scanStat{|LPow 2 N4|}{26}{6}
+  \scanStat{|Bush   N2|}{29}{5}
+}
 
-\begin{frame}{Comparison}
+\vspace{2ex}
+Size 256:\\[2ex]
+\scanStats{
+  \scanStat{|RPow 2 N8|}{1024}{8}
+  \scanStat{|LPow 2 N8|}{502}{14}
+  \scanStat{|Bush   N3|}{718}{10}
+}
 
-For 16 complex inputs and results:
+\end{frame}
 
+\begin{frame}{FFT comparison}
+Size 16:\\[2ex]
 \fftStats{
   \fftStat{|RPow 2 N4|}{74}{40}{74}{188}{8}
   \fftStat{|LPow 2 N4|}{74}{40}{74}{188}{8}
   \fftStat{|Bush   N2|}{72}{32}{72}{176}{6}
 }
 
-For 256 complex inputs and results:
-
+\vspace{2ex}
+Size 256:\\[2ex]
 \fftStats{
   \fftStat{|RPow 2 N8|}{2690}{2582}{2690}{7692}{20}
   \fftStat{|LPow 2 N8|}{2690}{2582}{2690}{7692}{20}
   \fftStat{|Bush   N3|}{2528}{1922}{2528}{6978}{14}
 }
-
 \end{frame}
 
 \end{document}
