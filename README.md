@@ -4,6 +4,8 @@ Prepared for the [2021 Oxford Tensor Programming Seminar](https://www.cs.ox.ac.u
 
 [Slides](http://conal.net/talks/can-tensor-programming-be-liberated.pdf)
 
+Related paper (and video): [*Generic parallel functional programming: Scan and FFT*](http://conal.net/papers/generic-parallel-functional/) (ICFP 2017)
+
 ### Abstract
 
 Classic Fortran programs used "`GO TO`" for control and (multi-dimensional) arrays for data.
