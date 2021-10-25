@@ -56,20 +56,18 @@
 {
   \leavevmode%
   \hbox{%
-  \begin{beamercolorbox}[ht=2.25ex,dp=1ex,center]{title in head/foot}%
-    \usebeamerfont{title in head/foot}Oxford Tensor Programming Seminar
+  \begin{beamercolorbox}[ht=4.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\vspace{0.5ex} Oxford Tensor Programming Seminar
   \end{beamercolorbox}%
   }
   \vskip0pt%
 }
-
 \makeatother
 
 \begin{document}
 
 \maketitle
 
-% https://tex.stackexchange.com/questions/83048/change-the-contents-of-footline-in-a-beamer-presentation
 \makeatletter
 \setbeamertemplate{footline}
 {
@@ -504,45 +502,16 @@ Recomposing yields infinite family of \emph{correct} parallel algorithms on trie
 All such tries are isomorphic to arrays (``unparsing/parsing'').
 \end{frame}
 
-%% %format ≅ = "\mathrel{\hat\cong}"
-
-%format Void = "\mathbf{0}"
-%format Unit = "\mathbf{1}"
-
-\begin{frame}{Index isomorphisms}
-\begin{textblock}{120}[1,0](340,55)
-\begin{tcolorbox}
-\small
-\mathindent-0.5ex
-\vspace{-1.5ex}
-\begin{code}
-data Fin :: Nat -> Type where
-  ZeroF  :: Fin (Succ n)
-  SuccF  :: Fin n -> Fin (Succ n)
-\end{code}
-\vspace{-4ex}
-\end{tcolorbox}
-\end{textblock}
-\vspace{6ex}
-\begin{code}
-Arr n a ≅ Fin n → a
-\end{code}
-\pause
-\vspace{0ex}
-\begin{center}
-\begin{code}
-Fin 0          ≅ Void
-
-Fin 1          ≅ Unit
-
-Fin (m  +  n)  ≅ Fin m  +   Fin n
-
-Fin (m  *  n)  ≅ Fin m  ×   Fin n
-\end{code}
-\end{center}
+\begin{frame}{Arrays are numeric exponentials}
+\begin{eqnarray*}
+a^0 &=& 1 \\[2ex]
+a^1 &=& a \\[2ex]
+a^{m + n} &=& a^m × a^n \\[2ex]
+a^{m \times n} &=& (a^m)^n
+\end{eqnarray*}
 \end{frame}
 
-\begin{frame}{Exponentials: trie algebra and isomorphisms}
+\begin{frame}{Tries are general exponentials}
 \mathindent1ex
 \begin{minipage}[t]{0.3\textwidth}
 \begin{code}
@@ -577,8 +546,8 @@ Arr (m  *  n)  ≅ Arr n  :.  Arr m
 %format zero = "\tilde0"
 %format one = "\tilde1"
 
-\begin{frame}{Trie algebra and \emph{constructive} isomorphisms}
-\vspace{5ex}
+\begin{frame}{Tries are general exponentials}
+\vspace{4.6ex}
 \mathindent1ex
 \begin{minipage}[t]{0.3\textwidth}
 \begin{code}
@@ -613,6 +582,7 @@ data (≅) :: (Type -> Type) -> (Type -> Type) -> Type where
 \end{code}
 \end{center}
 \end{frame}
+
 \begin{frame}{Vectors}
 \vspace{0.7ex}
 \begin{center}

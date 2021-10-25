@@ -3,7 +3,7 @@
 ### Abstract
 
 Classic Fortran programs used "`GO TO`" for control and (multi-dimensional) arrays for data.
-While these unstructured building blocks are adequate for encoding implementations, they fail to yield clear understanding of the essential nature of algorithms and their correctness.
+While these unstructured building blocks suffice to encode implementations, they fail to yield clear understanding of the essential nature of algorithms and their correctness.
 Although "`GO TO`" has largely disappeared from modern programming, arrays are still widely embraced for parallel programming and machine learning.
 The resulting programming style suffers in safety and compositionality, leading to code that is unnecessarily difficult to write, read, prove, and reuse.
 
