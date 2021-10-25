@@ -1,5 +1,9 @@
 ## Can Tensor Programming Be Liberated from the Fortran Data Paradigm?
 
+Prepared for the [2021 Oxford Tensor Programming Seminar](https://www.cs.ox.ac.uk/seminars/2418.html).
+
+[Slides](http://conal.net/talks/can-tensor-programming-be-liberated.pdf)
+
 ### Abstract
 
 Classic Fortran programs used "`GO TO`" for control and (multi-dimensional) arrays for data.

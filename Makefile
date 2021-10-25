@@ -50,6 +50,6 @@ clean:
 web: .token
 
 .token: latex/$(TALK).pdf
-	scp $< conal@conal.net:/home/conal/domains/conal/htdocs/talks/tensor-liberated.pdf
+	scp $< conal@conal.net:/home/conal/domains/conal/htdocs/talks/can-tensor-programming-be-liberated.pdf
 	@touch $@
 
