@@ -92,6 +92,8 @@
 }
 \makeatother
 
+%if False
+
 \begin{frame}{``This is the Unix philosophy:}
 \begin{itemize}\itemsep4ex
 \item Write programs that do one thing and do it well.
@@ -127,6 +129,8 @@ Many array programs contain a parser (from arrays) and unparser (to arrays).
 \vspace{10ex}
 Disentangling improves clarity and suggests improvements.
 \end{frame}
+
+%endif
 
 \definecolor{statColor}{rgb}{0,0,0.2}
 
@@ -539,7 +543,7 @@ Arr 1          ≅ I
 
 Arr (m  +  n)  ≅ Arr m  :*  Arr n
 
-Arr (m  *  n)  ≅ Arr n  :.  Arr m
+Arr (m  ×  n)  ≅ Arr n  :.  Arr m
 \end{code}
 \end{minipage}
 \vspace{8.5ex}
@@ -615,16 +619,16 @@ type family (RVec n) where
 
 Left-associated/bottom-up:
 \begin{code}
-type family (LPow h n) where
+type family (LPow h d) where
   LPow h Z      = I
-  LPow h (S n)  = LPow h n :. h
+  LPow h (S d)  = LPow h d :. h
 \end{code}
 
 Right-associated/top-down:
 \begin{code}
-type family (RPow h n) where
+type family (RPow h d) where
   RPow h Z      = I
-  RPow h (S n)  = h :. RPow h n
+  RPow h (S d)  = h :. RPow h d
 \end{code}
 \end{frame}
 
@@ -633,9 +637,9 @@ type family (RPow h n) where
 
 \begin{frame}{Bushes}
 \begin{code}
-type family (Bush n) where
+type family (Bush d) where
   Bush Z      = Pair
-  Bush (S n)  = Bush n :. Bush n
+  Bush (S d)  = Bush d :. Bush d
 \end{code}
 
 Notes:
@@ -695,8 +699,17 @@ Size 256:\\[2ex]
 }
 \end{frame}
 
+\begin{frame}{``But computer memory is arrays!''}
+\begin{itemize}\parskip10ex
+\pause
+\item Systematically convert natural algorithms to accommodate.
+\pause
+\item It's really |LPow 2 d| or |RPow 2 d|.
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Conclusions}
-\rnc{\baselinestretch}{1.7}
+\rnc{\baselinestretch}{1.8}
 \begin{itemize}
 \item Alternative to array programming:
   \begin{itemize}
@@ -705,9 +718,12 @@ Size 256:\\[2ex]
   \item Free of index computations (safe and uncluttered).
   \item Translates to array program safely and systematically.
   \end{itemize}
-\item Four well-known parallel algorithms: |RPow h n|, |LPow h n|. % perfect trees
-\item Two possibly new and useful algorithms: |Bush n|. % bushes
+\pause
+\item Four well-known parallel algorithms: |RPow h d|, |LPow h d|. % perfect trees
+\item Two new and possibly useful algorithms: |Bush d|. % bushes
+\pause
 \item Other examples: arithmetic, linear algebra, polynomials, bitonic sort.
+\pause
 \item \emph{Optimization matters but harms clarity and composability, so do it late}.
 \end{itemize}
 \end{frame}
