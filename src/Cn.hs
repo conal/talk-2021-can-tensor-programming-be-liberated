@@ -8,8 +8,8 @@ import Misc
 data P a = a :# a deriving Functor
 
 data Td :: Nat -> Type -> Type where
-  L  :: a -> Td Zero a
-  B  :: P (Td d a) -> Td (Succ d) a
+  L  :: a -> Td 0 a
+  B  :: P (Td d a) -> Td (d + 1) a
 deriving instance Functor (Td d)
 
 zipWithP :: (a -> b -> c) -> (P a -> P b -> P c)

@@ -1,5 +1,10 @@
 %% -*- latex -*-
 
+%% Tweak when recording for speaker video overlay in the upper right corner
+\newif\ifrecording
+
+\recordingtrue
+
 %% \documentclass[aspectratio=43]{beamer}
 \documentclass[aspectratio=169]{beamer}
 
@@ -125,11 +130,20 @@ Disentangling improves clarity and suggests improvements.
 
 \definecolor{statColor}{rgb}{0,0,0.2}
 
+\ifrecording
+\nc\stats[3]{}
+\else
 \nc\stats[3]{\hfill \small \textcolor{statColor}{size: #1, work: #2, depth: #3}\hspace{1.5ex}}
+\fi
 
 \begin{frame}{Linear prefix sum (left scan) \stats{16}{15}{15}}
 \begin{center}
+\ifrecording
+\vspace{3ex}
+\wpicture{0.85\textwidth}{lsums-lv16}\hspace{0.1\textwidth}{\ }
+\else
 \wpic{lsums-lv16}
+\fi
 \end{center}
 \end{frame}
 
@@ -237,7 +251,7 @@ Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formu
 
 %format Type = "\ast"
 
-\begin{frame}{Wrong guess: top-down, binary, leaf trees}
+\begin{frame}{Wrong guess: top-down, binary trees}
 \begin{code}
 data Td :: Type -> Type where
   L  :: a -> Td a
@@ -259,21 +273,11 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
-%format Succ = Suc
-
-\begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect}, leaf trees}
-\begin{textblock}{128}[1,0](350,45)
-\begin{tcolorbox}
-\mathindent1ex
-\begin{code}
-data Nat = Zero | Succ Nat
-\end{code}
-\end{tcolorbox}
-\end{textblock}
+\begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect} trees}
 \begin{code}
 data Td :: Nat -> Type -> Type where
-  L  :: a -> Td Zero a
-  B  :: Td d a -> Td d a -> Td (Succ d) a
+  L  :: a -> Td 0 a
+  B  :: Td d a -> Td d a -> Td (d + 1) a
 
 deriving instance Functor (Td d)
 
@@ -288,19 +292,19 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{16}{32}{4}}
+\begin{frame}{Top-down tree scan \stats{16}{32}{4}}
 \begin{center}
 \wpic{lsums-rt4}
 \end{center}
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{32}{80}{5}}
+\begin{frame}{Top-down tree scan \stats{32}{80}{5}}
 \begin{center}
 \wpic{lsums-rt5}
 \end{center}
 \end{frame}
 
-\begin{frame}{Work-inefficient parallel prefix (left scan) \stats{64}{192}{6}}
+\begin{frame}{Top-down tree scan \stats{64}{192}{6}}
 \begin{center}
 \wpic{lsums-rt6}
 \end{center}
@@ -317,14 +321,14 @@ scanTd (B u v)  = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 \end{tikzcd}\]
 \end{frame}
 
-\begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect}, leaf trees}
+\begin{frame}{Refined wrong guess: top-down, binary, \emph{perfect} trees}
 \vspace{-1.9ex}
 \begin{code}
 SPC
 SPC
 data Td :: Nat -> Type -> Type where
-  L  :: a -> Td Zero a
-  B  :: Td d a -> Td d a -> Td (Succ d) a
+  L  :: a -> Td 0 a
+  B  :: Td d a -> Td d a -> Td (d + 1) a
 deriving instance Functor (Td d)
 
 SPC
@@ -347,8 +351,8 @@ scanTd (B u v) = (B u' (fmap (utot ⊕) v') , utot <> vtot)
 data P a = a :# a deriving Functor
 
 data Td :: Nat -> Type -> Type where
-  L  :: a -> Td Zero a
-  B  :: P (Td d a) -> Td (Succ d) a
+  L  :: a -> Td 0 a
+  B  :: P (Td d a) -> Td (d + 1) a
 deriving instance Functor (Td d)
 
 SPC
@@ -364,14 +368,14 @@ scanTd (B (u :# v)) = (B (u' :# fmap (utot <>) v') , utot <> vtot)
 \end{code}
 \end{frame}
 
-\begin{frame}{Wrong guess: top-down, binary, perfect, leaf trees}
+\begin{frame}{Wrong guess: top-down, binary, perfect trees}
 \vspace{-1ex}
 \begin{code}
 data P a = a :# a deriving Functor
 
 data Td :: Nat -> Type -> Type where
-  L  :: a -> Td Zero a
-  B  :: P (Td d a) -> Td (Succ d) a
+  L  :: a -> Td 0 a
+  B  :: P (Td d a) -> Td (d + 1) a
 deriving instance Functor (Td d)
 
 scanP :: Monoid a => P a -> P a × a
@@ -384,7 +388,7 @@ scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
     (ts', tots)   = unzipP (fmap scanTd ts)
     (tots', tot)  = scanP tots
     tweak x       = fmap (x ⊕)
-\end{code}\\[-4ex]
+\end{code}\\[-5ex]
 \hfill Work: $O (n \lg n)$, depth: $O (\lg n)$.
 \end{frame}
 
@@ -393,14 +397,14 @@ scanTd (B ts) = (B (zipWithP tweak tots' ts'), tot)
 %format zipWithTu = zipWithT"\up"
 %format unzipTu = unzipT"\up"
 
-\begin{frame}{Right guess: \emph{bottom-up}, perfect, binary, leaf trees}
+\begin{frame}{Right guess: \emph{bottom-up}, perfect, binary trees}
 \vspace{-1ex}
 \begin{code}
 data P a = a :# a deriving Functor
 
 data Tu :: Nat -> Type -> Type where
-  L  :: a -> Tu Zero a
-  B  :: Tu d (P a) -> Tu (Succ d) a
+  L  :: a -> Tu 0 a
+  B  :: Tu d (P a) -> Tu (d + 1) a
 deriving instance Functor (Tu d)
 
 scanP :: Monoid a => P a -> P a × a
@@ -413,7 +417,7 @@ scanTu (B ps) = (B (zipWithTu tweak tots' ps'), tot)
     (ps', tots)   = unzipTu (fmap scanP ps)
     (tots', tot)  = scanTu tots
     tweak x       = fmap (x ⊕)
-\end{code}\\[-4ex]
+\end{code}\\[-5ex]
 \hfill Work: $O (n)$, depth: $O (\lg n)$.
 \end{frame}
 

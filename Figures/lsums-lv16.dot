@@ -53,7 +53,7 @@ digraph lsums_lv16 {
   c17:Out14 -> c14:In1 [];
   c14:Out0 -> c15:In0 [];
   c17:Out15 -> c15:In1 [];
-  c16:Out0 -> c18:In0 [];
+  c16:Out0 -> c18:In0 [minlen = 3];
   c17:Out0 -> c18:In1 [];
   c1:Out0 -> c18:In2 [];
   c2:Out0 -> c18:In3 [];

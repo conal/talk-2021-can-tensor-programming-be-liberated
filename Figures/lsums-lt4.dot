@@ -85,7 +85,7 @@ digraph lsums_lt4 {
   c22:Out0 -> c24:In1;
   c22:Out0 -> c25:In0;
   c23:Out0 -> c25:In1;
-  c26:Out0 -> c28:In0;
+  c26:Out0 -> c28:In0 [minlen = 2];
   c27:Out0 -> c28:In1;
   c0:Out0 -> c28:In2;
   c2:Out0 -> c28:In3;
