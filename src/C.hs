@@ -17,7 +17,7 @@ unzipP = undefined
 -- Oh! I can't define zipWithP without matching shapes (depth indices).
 
 scanP :: Monoid a => P a -> P a × a
-scanP (x :# y) = (mempty :# x , y)
+scanP (x :# y) = (mempty :# x , x <> y)
 
 scanTd :: Monoid a => Td a -> Td a × a
 scanTd (L x) = (L mempty , x)

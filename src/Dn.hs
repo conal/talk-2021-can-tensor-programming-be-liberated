@@ -19,7 +19,7 @@ unzipTu :: Tu d (a , b) -> Tu d a × Tu d b
 unzipTu = undefined
 
 scanP :: Monoid a => P a -> P a × a
-scanP (x :# y) = (mempty :# x , y)
+scanP (x :# y) = (mempty :# x , x <> y)
 
 scanTu :: Monoid a => Tu d a -> Tu d a × a
 scanTu (L x) = (L mempty , x)

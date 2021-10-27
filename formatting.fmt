@@ -142,9 +142,9 @@
 
 %format (Bush (n)) = "2^{2^{"n"}}"
 
-%format Z = 0
-%format S  n = n + 1
-%format S' n = 1 + n
+%% %format Z = 0
+%% %format S  n = n + 1
+%% %format S' n = 1 + n
 
 %% \setlength{\blanklineskip}{0.66084ex}
 \setlength{\blanklineskip}{2ex}

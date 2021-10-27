@@ -202,13 +202,13 @@ Still, why does it work, and how does it (correctly) generalize?
 What is it?
 \end{frame}
 
-\nc\Q[2]{Q\ #1\ #2}
+\nc\Z[2]{Z\ #1\ #2}
 \nc\id{\text{id}}
 \nc\scanA{\textit{scanA}}
 \nc\Arr[2]{\textit{Arr}\ {#1}\  #2}
 
-\nc\parseQ{\textit{parseQ}}
-\nc\scanQ{\textit{scanQ}}
+\nc\parseZ{\textit{parseZ}}
+\nc\scanZ{\textit{scanZ}}
 
 \begin{frame}{Clarifying the question}
 \vspace{21ex}
@@ -220,29 +220,29 @@ What is it?
 \begin{frame}{Clarifying the question}
 \vspace{4ex}
 \[\begin{tikzcd}[column sep = 13em, row sep = 8em]
-  \Q d a \arR{\scanQ} \Q d a \\
+  \Z d a \arR{\scanZ} \Z d a \\
   \Arr{2^d}a \arR{\scanA} \Arr{2^d}a
 \end{tikzcd}\]\\[6ex]
-\textcolor{white}{Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.}
+\textcolor{white}{Where $\scanZ$ is simple to state, prove, and generalize; and $\parseZ$ is formulaic in |Z|.}
 \end{frame}
 
 \begin{frame}{Clarifying the question}
 \vspace{4ex}
 \[\begin{tikzcd}[column sep = 13em, row sep = 8em]
-  \Q d a \arR{\scanQ} \Q d a \\
-  \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a \arU{\parseQ}
+  \Z d a \arR{\scanZ} \Z d a \\
+  \Arr{2^d}a \arUR{\parseZ}{\scanA} \Arr{2^d}a \arU{\parseZ}
 \end{tikzcd}\]\\[6ex]
 \pause
-Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.
+Where $\scanZ$ is simple to state, prove, and generalize; and $\parseZ$ is formulaic in |Z|.
 \end{frame}
 
 \begin{frame}{A compositional refinement}
 \vspace{4ex}
 \[\begin{tikzcd}[column sep = 13em, row sep = 8em]
-  \Q d a \arR{\scanQ} \Q d a × a \\
-  \Arr{2^d}a \arUR{\parseQ}{\scanA} \Arr{2^d}a × a \arU{\parseQ ⊗ \id}
+  \Z d a \arR{\scanZ} \Z d a × a \\
+  \Arr{2^d}a \arUR{\parseZ}{\scanA} \Arr{2^d}a × a \arU{\parseZ ⊗ \id}
 \end{tikzcd}\]\\[6ex]
-Where $\scanQ$ is simple to state, prove, and generalize; and $\parseQ$ is formulaic in |Q|.
+Where $\scanZ$ is simple to state, prove, and generalize; and $\parseZ$ is formulaic in |Z|.
 \end{frame}
 
 \nc\down{{\scriptscriptstyle ↓}}
@@ -383,7 +383,7 @@ data Td :: Nat -> Type -> Type where
 deriving instance Functor (Td d)
 
 scanP :: Monoid a => P a -> P a × a
-scanP (x :# y) = (mempty :# x , y)
+scanP (x :# y) = (mempty :# x , x <> y)
 
 scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
@@ -412,7 +412,7 @@ data Tu :: Nat -> Type -> Type where
 deriving instance Functor (Tu d)
 
 scanP :: Monoid a => P a -> P a × a
-scanP (x :# y) = (mempty :# x , y)
+scanP (x :# y) = (mempty :# x , x <> y)
 
 scanTu :: Monoid a => Tu d a -> Tu d a × a
 scanTu (L x) = (L mempty , x)
@@ -507,7 +507,7 @@ Re-express parallel algorithm via singletons, products, and \emph{compositions}.
 
 Recomposing yields infinite family of \emph{correct} parallel algorithms on tries.
 
-All such tries are isomorphic to arrays (``unparsing/parsing'').
+All such tries are isomorphic to arrays (``parsing/unparsing'').
 \end{frame}
 
 \begin{frame}{Arrays are numeric exponentials}
@@ -597,49 +597,49 @@ data (≅) :: (Type -> Type) -> (Type -> Type) -> Type where
 \Large $\bar n = \overbrace{I \times \cdots \times I\:}^{n \text{~times}}$
 \end{center}
 
-Left-associated:
+Right-associated (``cons''):
 \begin{code}
-type family (LVec n) where
-  LVec Z      = U
-  LVec (S n)  = LVec n :* I
+type family (RVec d) where
+  RVec 0        = U
+  RVec (d + 1)  = I :* RVec d
 \end{code}
 
-Right-associated:
+Left-associated (``snoc''):
 \begin{code}
-type family (RVec n) where
-  RVec Z      = U
-  RVec (S n)  = I :* RVec n
+type family (LVec d) where
+  LVec Z        = U
+  LVec (d + 1)  = LVec d :* I
 \end{code}
 \end{frame}
 
 \begin{frame}{Perfect trees}
 \begin{center}
-\Large $h^n = \overbrace{h \circ \cdots \circ h\:}^{n \text{~times}}$
+\Large $h^d = \overbrace{h \circ \cdots \circ h\:}^{d \text{~times}}$
 \end{center}
 
-Left-associated/bottom-up:
-\begin{code}
-type family (LPow h d) where
-  LPow h Z      = I
-  LPow h (S d)  = LPow h d :. h
-\end{code}
-
-Right-associated/top-down:
+Right-associated (``top-down''):
 \begin{code}
 type family (RPow h d) where
-  RPow h Z      = I
-  RPow h (S d)  = h :. RPow h d
+  RPow h 0        = I
+  RPow h (d + 1)  = h :. RPow h d
 \end{code}
+Left-associated (``bottom-up''):
+\begin{code}
+type family (LPow h d) where
+  LPow h 0        = I
+  LPow h (d + 1)  = LPow h d :. h
+\end{code}
+
 \end{frame}
 
 %format Bush' = "\Varid{Bush}"
-%format twon = "2^n"
+%format twod = "2^d"
 
 \begin{frame}{Bushes}
 \begin{code}
 type family (Bush d) where
-  Bush Z      = Pair
-  Bush (S d)  = Bush d :. Bush d
+  Bush 0      = Pair
+  Bush (d + 1)  = Bush d :. Bush d
 \end{code}
 
 Notes:
@@ -647,7 +647,7 @@ Notes:
 \begin{itemize}
 \item Variation of |Bush'| type in \href{http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.184.8120}{\emph{Nested Datatypes}} by Bird \& Meertens.
 \item Size $2^{2^n}$, i.e., $2, 4, 16, 256, 65536, \ldots$.
-\item Composition-balanced counterpart to |LPow 2 twon| and |RPow 2 twon|.
+\item Composition-balanced counterpart to |LPow 2 twod| and |RPow 2 twod|.
 \item Easily generalizes beyond pairing and squaring.
 \end{itemize}
 \end{frame}

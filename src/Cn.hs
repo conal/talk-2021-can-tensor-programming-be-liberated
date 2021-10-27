@@ -19,7 +19,7 @@ unzipP :: P (a × b) -> P a × P b
 unzipP = undefined
 
 scanP :: Monoid a => P a -> P a × a
-scanP (x :# y) = (mempty :# x , y)
+scanP (x :# y) = (mempty :# x , x <> y)
 
 scanTd :: Monoid a => Td d a -> Td d a × a
 scanTd (L x) = (L mempty , x)
