@@ -2,6 +2,8 @@
 
 Prepared for the [2021 Oxford Tensor Programming Seminar](https://www.cs.ox.ac.uk/seminars/2418.html).
 
+[Video](https://www.youtube.com/watch?v=oaIMMclGuog)
+
 [Slides](http://conal.net/talks/can-tensor-programming-be-liberated.pdf)
 
 Related paper (and video): [*Generic parallel functional programming: Scan and FFT*](http://conal.net/papers/generic-parallel-functional/) (ICFP 2017)
