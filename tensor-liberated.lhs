@@ -132,6 +132,34 @@ Disentangling improves clarity and suggests improvements.
 
 %endif
 
+%if False
+
+\nc\bboxed[1]{\boxed{\rule[-0.9ex]{0pt}{2.8ex}#1}}
+\nc\vox[1]{\bboxed{#1}}
+\nc\tvox[2]{\vox{#1}\vox{#2}}
+
+\nc\trans[1]{\\[1.3ex] #1 \\[0.75ex]}
+
+\begin{frame}{Prefix sum (left scan)}
+\begin{center}
+\begin{minipage}[c]{0.3\textwidth}
+\[
+\begin{array}{c}
+\vox{a_1, \ldots, a_n}
+\trans{\Downarrow}
+\tvox{b_1, \ldots, b_n}{b_{n+1}}
+\end{array}
+\]
+\end{minipage}
+where
+\begin{minipage}[c]{0.3\textwidth}
+\[ b_k = \sum\limits_{1 \le i < k}{a_i} \]
+\end{minipage}
+\end{center}
+\end{frame}
+
+%endif
+
 \definecolor{statColor}{rgb}{0,0,0.2}
 
 \ifrecording
