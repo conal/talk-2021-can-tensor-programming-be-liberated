@@ -92,72 +92,10 @@
 }
 \makeatother
 
-%if False
-
-\begin{frame}{``This is the Unix philosophy:}
-\begin{itemize}\itemsep4ex
-\item Write programs that do one thing and do it well.
-\item Write programs to work together.
-\item Write programs to handle text streams, because that is a universal interface.''
-\end{itemize}
-\vspace{2ex}
-\begin{flushright}
--- Doug McIlroy \hspace{0.5in}{\ }
-\end{flushright}
-\end{frame}
-
-\begin{frame}{How Unix defeated its own philosophy}
-%% \pause
-\begin{itemize}\itemsep4ex
-\item \textcolor{blue}{Write programs that do one thing and do it well.}
-\item Write programs to work together.
-\item \textcolor{red}{Write programs to handle text streams, because that is a universal interface.}
-\end{itemize}
-
-\pause
-\vspace{5.5ex}
-\emph{Many Unix programs contain an entangled parser (from text) and unparser (to text).}
-\end{frame}
-
-\begin{frame}{Likewise,}
-\vspace{10ex}
-\vfill
-\begin{center} \em
-Many array programs contain a parser (from arrays) and unparser (to arrays).
-\end{center}
-\vfill
-\vspace{10ex}
-Disentangling improves clarity and suggests improvements.
-\end{frame}
-
-%endif
-
-%if False
-
-\nc\bboxed[1]{\boxed{\rule[-0.9ex]{0pt}{2.8ex}#1}}
-\nc\vox[1]{\bboxed{#1}}
-\nc\tvox[2]{\vox{#1}\vox{#2}}
-
-\nc\trans[1]{\\[1.3ex] #1 \\[0.75ex]}
-
+%if True
 \begin{frame}{Prefix sum (left scan)}
-\begin{center}
-\begin{minipage}[c]{0.3\textwidth}
-\[
-\begin{array}{c}
-\vox{a_1, \ldots, a_n}
-\trans{\Downarrow}
-\tvox{b_1, \ldots, b_n}{b_{n+1}}
-\end{array}
-\]
-\end{minipage}
-where
-\begin{minipage}[c]{0.3\textwidth}
-\[ b_k = \sum\limits_{1 \le i < k}{a_i} \]
-\end{minipage}
-\end{center}
+\[ b_k = \sum\limits_{i < k}{a_i} \]
 \end{frame}
-
 %endif
 
 \definecolor{statColor}{rgb}{0,0,0.2}
@@ -168,7 +106,7 @@ where
 \nc\stats[3]{\hfill \small \textcolor{statColor}{size: #1, work: #2, depth: #3}\hspace{1.5ex}}
 \fi
 
-\begin{frame}{Linear prefix sum (left scan) \stats{16}{15}{15}}
+\begin{frame}{Efficient \emph{sequential} scan \stats{16}{15}{15}}
 \begin{center}
 \ifrecording
 \vspace{3ex}
@@ -179,7 +117,7 @@ where
 \end{center}
 \end{frame}
 
-\begin{frame}{Efficient \emph{parallel} prefix (left scan) \stats{16}{27}{6}}
+\begin{frame}{Efficient \emph{parallel} scan \stats{16}{27}{6}}
 \begin{center}
 \wpic{lsums-lt4}
 \end{center}
@@ -187,12 +125,6 @@ where
 \vspace{-5.5ex}
 \hfill Work: $O (n)$, depth: $O (\lg n)$.\\[0ex]{\ }
 \end{frame}
-
-%% \begin{frame}{Efficient parallel prefix (left scan) \stats{32}{58}{8}}
-%% \begin{center}
-%% \wpic{lsums-lt5}
-%% \end{center}
-%% \end{frame}
 
 \begin{frame}{An efficient array program (CUDA C)}
 \vspace{0.5ex}
